@@ -1,0 +1,134 @@
+# STM32 Boards
+
+menu.device_variant=Variant
+menu.bootloader_version=Bootloader version
+menu.upload_method=Upload method
+menu.cpu_speed=CPU Speed(MHz)
+
+##############################################################
+STM32Mini.name=Lembed STM32Mini
+
+STM32Mini.build.board=STM32Mini
+STM32Mini.vid.0=0x1EAF
+STM32Mini.pid.0=0x0004
+STM32Mini.build.core=maple
+STM32Mini.build.cpu_flags=-DMCU_STM32F103CB -DSERIAL_USB
+STM32Mini.build.variant=stm32mini
+STM32Mini.upload.usbID=1EAF:0003
+
+STM32Mini.upload.tool=maple_upload
+STM32Mini.upload.protocol=maple_dfu
+STM32Mini.upload.use_1200bps_touch=false
+STM32Mini.upload.file_type=bin
+STM32Mini.upload.auto_reset=true
+
+STM32Mini.menu.bootloader_version.original = Original (17k RAM,108k Flash)
+STM32Mini.menu.bootloader_version.original.build.vect=VECT_TAB_ADDR=0x8005000
+STM32Mini.menu.bootloader_version.original.build.ldscript=ld/flash.ld
+STM32Mini.menu.bootloader_version.original.upload.ram.maximum_size=17408
+STM32Mini.menu.bootloader_version.original.upload.flash.maximum_size=110592
+STM32Mini.menu.bootloader_version.original.upload.maximum_size=110592
+STM32Mini.menu.bootloader_version.original.upload.altID=1
+
+STM32Mini.menu.bootloader_version.bootloader20 = Bootloader 2.0 (20k RAM,120k Flash)
+STM32Mini.menu.bootloader_version.bootloader20.build.vect=VECT_TAB_ADDR=0x8002000
+STM32Mini.menu.bootloader_version.bootloader20.build.ldscript=ld/bootloader_20.ld
+STM32Mini.menu.bootloader_version.bootloader20.upload.ram.maximum_size=20480
+STM32Mini.menu.bootloader_version.bootloader20.upload.flash.maximum_size=122880
+STM32Mini.menu.bootloader_version.bootloader20.upload.maximum_size=122880
+STM32Mini.menu.bootloader_version.bootloader20.upload.altID=2
+
+
+###################### STM32DUINO ########################################
+
+STM32DUINO.name=Lembed STM32Duino
+STM32DUINO.vid.0=0x1EAF
+STM32DUINO.pid.0=0x0004
+STM32DUINO.build.variant=stm32f103cxx
+STM32DUINO.build.vect=VECT_TAB_ADDR=0x8000000
+STM32DUINO.build.core=maple
+STM32DUINO.build.board=STM32F103CXX
+STM32DUINO.upload.use_1200bps_touch=false
+STM32DUINO.upload.file_type=bin
+STM32DUINO.upload.auto_reset=true
+
+## STM32F103C8 -------------------------
+STM32DUINO.menu.device_variant.STM32F103C8=STM32F103C8 (20k RAM. 64k Flash)
+STM32DUINO.menu.device_variant.STM32F103C8.build.cpu_flags=-DMCU_STM32F103C8
+STM32DUINO.menu.device_variant.STM32F103C8.build.ldscript=ld/jtag_c8.ld
+STM32DUINO.menu.device_variant.STM32F103C8.upload.maximum_size=65536
+STM32DUINO.menu.device_variant.STM32F103C8.upload.ram.maximum_size=20480
+STM32DUINO.menu.device_variant.STM32F103C8.upload.flash.maximum_size=65536
+
+#---------------------------- UPLOAD METHODS ---------------------------
+
+STM32DUINO.menu.upload_method.DFUUploadMethod=STM32duino bootloader
+STM32DUINO.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+STM32DUINO.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+STM32DUINO.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
+STM32DUINO.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
+STM32DUINO.menu.upload_method.DFUUploadMethod.build.ldscript=ld/bootloader_20.ld
+STM32DUINO.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+STM32DUINO.menu.upload_method.DFUUploadMethod.upload.altID=2
+
+STM32DUINO.menu.upload_method.serialMethod=Serial
+STM32DUINO.menu.upload_method.serialMethod.upload.protocol=maple_serial
+STM32DUINO.menu.upload_method.serialMethod.upload.tool=serial_upload
+
+
+STM32DUINO.menu.upload_method.STLinkMethod=STLink
+STM32DUINO.menu.upload_method.STLinkMethod.upload.protocol=STLink
+STM32DUINO.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+STM32DUINO.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+STM32DUINO.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+STM32DUINO.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+STM32DUINO.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+STM32DUINO.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
+
+
+########################### STM32F103ZXX ###########################
+
+STM32F103ZXX.name=Lembed IOduino
+STM32F103ZXX.vid.0=0x1EAF
+STM32F103ZXX.pid.0=0x0004
+STM32F103ZXX.build.variant=stm32f103zxx
+STM32F103ZXX.build.vect=VECT_TAB_ADDR=0x8000000
+STM32F103ZXX.build.core=maple
+STM32F103ZXX.build.board=STM32F103ZXX
+STM32F103ZXX.upload.use_1200bps_touch=false
+STM32F103ZXX.upload.file_type=bin
+STM32F103ZXX.upload.auto_reset=true
+
+
+STM32F103ZXX.menu.device_variant.STM32F103ZE=STM32F103ZE
+STM32F103ZXX.menu.device_variant.STM32F103ZE.build.cpu_flags=-DMCU_STM32F103ZE
+STM32F103ZXX.menu.device_variant.STM32F103ZE.upload.maximum_size=524288
+STM32F103ZXX.menu.device_variant.STM32F103ZE.upload.ram.maximum_size=65536
+STM32F103ZXX.menu.device_variant.STM32F103ZE.upload.flash.maximum_size=524288
+STM32F103ZXX.menu.device_variant.STM32F103ZE.build.ldscript=ld/stm32f103ze.ld
+
+#---------------------------- UPLOAD METHODS ---------------------------
+
+STM32F103ZXX.menu.upload_method.DFUUploadMethod=STM32duino bootloader
+STM32F103ZXX.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
+STM32F103ZXX.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
+STM32F103ZXX.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
+STM32F103ZXX.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
+STM32F103ZXX.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103z_dfu.ld
+STM32F103ZXX.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
+STM32F103ZXX.menu.upload_method.DFUUploadMethod.upload.altID=2
+
+STM32F103ZXX.menu.upload_method.serialMethod=Serial
+STM32F103ZXX.menu.upload_method.serialMethod.upload.protocol=maple_serial
+STM32F103ZXX.menu.upload_method.serialMethod.upload.tool=serial_upload
+
+STM32F103ZXX.menu.upload_method.STLinkMethod=STLink
+STM32F103ZXX.menu.upload_method.STLinkMethod.upload.protocol=STLink
+STM32F103ZXX.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
+STM32F103ZXX.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
+
+STM32F103ZXX.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
+STM32F103ZXX.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
+STM32F103ZXX.menu.upload_method.BMPMethod.upload.tool=bmp_upload
+STM32F103ZXX.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
