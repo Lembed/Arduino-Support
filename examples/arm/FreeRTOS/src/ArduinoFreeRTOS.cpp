@@ -24,7 +24,7 @@
  * SOFTWARE.
  *****************************************************************************/
 
-#include "MapleFreeRTOS821.h"
+#include "ArduinoFreeRTOS.h"
 
 extern "C" {
 
