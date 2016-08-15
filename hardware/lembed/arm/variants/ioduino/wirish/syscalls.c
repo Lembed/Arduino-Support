@@ -57,7 +57,8 @@ extern char _lm_heap_end;
  * Get incr bytes more RAM (for use by the heap).  malloc() and
  * friends call this function behind the scenes.
  */
-void *_sbrk(int incr) {
+void *_sbrk(int incr)
+{
     static void * pbreak = NULL; /* current program break */
     void * ret;
 
@@ -68,7 +69,7 @@ void *_sbrk(int incr) {
     if ((CONFIG_HEAP_END - pbreak < incr) ||
         (pbreak - CONFIG_HEAP_START < -incr)) {
         errno = ENOMEM;
-        return (void *)-1;
+        return (void *) - 1;
     }
 
     ret = pbreak;
@@ -76,58 +77,68 @@ void *_sbrk(int incr) {
     return ret;
 }
 
-__weak int _open(const char *path, int flags, ...) {
+__weak int _open(const char *path, int flags, ...)
+{
     return 1;
 }
 
-__weak int _close(int fd) {
+__weak int _close(int fd)
+{
     return 0;
 }
 
-__weak int _fstat(int fd, struct stat *st) {
+__weak int _fstat(int fd, struct stat *st)
+{
     st->st_mode = S_IFCHR;
     return 0;
 }
 
-__weak int _isatty(int fd) {
+__weak int _isatty(int fd)
+{
     return 1;
 }
 
-__weak int isatty(int fd) {
+__weak int isatty(int fd)
+{
     return 1;
 }
 
-__weak int _lseek(int fd, off_t pos, int whence) {
+__weak int _lseek(int fd, off_t pos, int whence)
+{
     return -1;
 }
 
-__weak unsigned char getch(void) {
+__weak unsigned char getch(void)
+{
     return 0;
 }
 
 
-__weak int _read(int fd, char *buf, size_t cnt) {
+__weak int _read(int fd, char *buf, size_t cnt)
+{
     *buf = getch();
 
     return 1;
 }
 
-__weak void putch(unsigned char c) {
+__weak void putch(unsigned char c)
+{
 }
 
-__weak void cgets(char *s, int bufsize) {
+__weak void cgets(char *s, int bufsize)
+{
     char *p;
     int c;
     int i;
 
     for (i = 0; i < bufsize; i++) {
-        *(s+i) = 0;
+        *(s + i) = 0;
     }
 //    memset(s, 0, bufsize);
 
     p = s;
 
-    for (p = s; p < s + bufsize-1;) {
+    for (p = s; p < s + bufsize - 1;) {
         c = getch();
         switch (c) {
         case '\r' :
@@ -155,7 +166,8 @@ __weak void cgets(char *s, int bufsize) {
     return;
 }
 
-__weak int _write(int fd, const char *buf, size_t cnt) {
+__weak int _write(int fd, const char *buf, size_t cnt)
+{
     int i;
 
     for (i = 0; i < cnt; i++)
@@ -165,12 +177,14 @@ __weak int _write(int fd, const char *buf, size_t cnt) {
 }
 
 /* Override fgets() in newlib with a version that does line editing */
-__weak char *fgets(char *s, int bufsize, void *f) {
+__weak char *fgets(char *s, int bufsize, void *f)
+{
     cgets(s, bufsize);
     return s;
 }
 
-__weak void _exit(int exitcode) {
+__weak void _exit(int exitcode)
+{
     while (1)
         ;
 }

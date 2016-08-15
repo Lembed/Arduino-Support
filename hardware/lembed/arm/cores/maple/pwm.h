@@ -47,7 +47,7 @@ void pwmWrite(uint8 pin, uint16 duty_cycle16);
 
 /**
  * Roger Clark. 20140103
- * Added function to replicate the Arduino PWM functionality or range 0 to 255 
+ * Added function to replicate the Arduino PWM functionality or range 0 to 255
  * User code is expected to determine and honor the maximum value
  * (based on the configured period).
  *

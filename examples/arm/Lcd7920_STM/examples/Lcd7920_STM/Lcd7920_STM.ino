@@ -38,15 +38,15 @@ void loop()
     static byte counter = 0;
     //
     counter++;
-    if (counter > 128)
-    {
+
+    if (counter > 128) {
         counter = 0;
         delay(1000);
         lcd.clear();
         lcd.setCursor(35, 0);
         lcd.print("Counter: ");
     }
-    
+
     lcd.box(0, 0, counter - 1, 5, PixelClear);
     lcd.box(0, 0, counter, 5, PixelSet);
     lcd.fillbox(0, 55, counter, 10, PixelSet);
@@ -55,6 +55,6 @@ void loop()
     lcd.setCursor(35, 55);
     lcd.print(counter);
     lcd.print(" ");
-    
+
 }
 

@@ -111,20 +111,20 @@
 
  Operation can't be guaranteed using API calls, as the bus timings may be incorrect on some slower architectures.
 
- Notes. 
+ Notes.
  BASEREG is not used, and hence the result of the macro is 0 (zero)
 
- IO_REG_TYPE has been set to a generic data type of unsigned int , which should be available on most architectures 
+ IO_REG_TYPE has been set to a generic data type of unsigned int , which should be available on most architectures
 
  IO_REG_ASM    is not used
 
  PIN_TO_BITMASK returns the pin number, hence the bitmask private variable will be used to store the pin number rather than the bit mask,
  This is a minor hack as the variable will not contain the item advertised by its name.
 */
-#define PIN_TO_BASEREG(pin)            (0) 
-#define PIN_TO_BITMASK(pin)            ( pin ) 
+#define PIN_TO_BASEREG(pin)            (0)
+#define PIN_TO_BITMASK(pin)            ( pin )
 #define IO_REG_TYPE unsigned int
-#define IO_REG_ASM             
+#define IO_REG_ASM
 #define DIRECT_READ(base, pin)       digitalRead(pin)
 #define DIRECT_WRITE_LOW(base, pin)  digitalWrite(pin, LOW)
 #define DIRECT_WRITE_HIGH(base, pin) digitalWrite(pin, HIGH)
@@ -136,7 +136,7 @@
 
 class OneWire
 {
-  private:
+private:
     IO_REG_TYPE bitmask;
     volatile IO_REG_TYPE *baseReg;
 
@@ -148,7 +148,7 @@ class OneWire
     uint8_t LastDeviceFlag;
 #endif
 
-  public:
+public:
     OneWire( uint8_t pin);
 
     // Perform a 1-Wire reset cycle. Returns 1 if a device responds
@@ -223,8 +223,8 @@ class OneWire
     //    ReadBytes(net, buf+3, 10);  // Read 6 data bytes, 2 0xFF, 2 CRC16
     //    if (!CheckCRC16(buf, 11, &buf[11])) {
     //        // Handle error.
-    //    }     
-    //          
+    //    }
+    //
     // @param input - Array of bytes to checksum.
     // @param len - How many bytes to use.
     // @param inverted_crc - The two CRC16 bytes in the received data.

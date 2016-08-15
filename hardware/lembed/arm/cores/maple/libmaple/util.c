@@ -47,7 +47,8 @@ extern __weak usart_dev* __lm_enable_error_usart(void);
 #endif
 
 /* (Called from exc.S with global interrupts disabled.) */
-__attribute__((noreturn)) void __error(void) {
+__attribute__((noreturn)) void __error(void)
+{
     if (__lm_error) {
         __lm_error();
     }
@@ -65,7 +66,8 @@ __attribute__((noreturn)) void __error(void) {
  * @param exp String representation of failed assertion
  * @sideeffect Turns of all peripheral interrupts except USB.
  */
-void _fail(const char* file, int line, const char* exp) {
+void _fail(const char* file, int line, const char* exp)
+{
     if (__lm_enable_error_usart) {
         /* Initialize the error USART */
         usart_dev *err_usart = __lm_enable_error_usart();
@@ -89,7 +91,8 @@ void _fail(const char* file, int line, const char* exp) {
  * get redirected to _fail.
  */
 void __assert_func(const char* file, int line, const char* method,
-                   const char* expression) {
+                   const char* expression)
+{
     _fail(file, line, expression);
 }
 
@@ -97,7 +100,8 @@ void __assert_func(const char* file, int line, const char* method,
  * Provide an abort() implementation that aborts execution and punts
  * to __error().
  */
-void abort() {
+void abort()
+{
     if (__lm_enable_error_usart) {
         /* Initialize the error USART */
         usart_dev *err_usart = __lm_enable_error_usart();
@@ -114,7 +118,8 @@ void abort() {
  * @brief Fades the error LED on and off
  * @sideeffect Sets output push-pull on ERROR_LED_PIN.
  */
-__attribute__((noreturn)) void throb(void) {
+__attribute__((noreturn)) void throb(void)
+{
 #ifdef HAVE_ERROR_LED
     int32  slope   = 1;
     uint32 CC      = 0x0000;

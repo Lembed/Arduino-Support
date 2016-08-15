@@ -55,13 +55,15 @@ static void ifaceSetupHook(unsigned, void*);
 
 #define USB_TIMEOUT 50
 
-USBSerial::USBSerial(void) {
+USBSerial::USBSerial(void)
+{
 #if !BOARD_HAVE_SERIALUSB
     ASSERT(0);
 #endif
 }
 
-void USBSerial::begin(void) {
+void USBSerial::begin(void)
+{
 #if BOARD_HAVE_SERIALUSB
     usb_cdcacm_enable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
     usb_cdcacm_set_hooks(USB_CDCACM_HOOK_RX, rxHook);
@@ -70,42 +72,46 @@ void USBSerial::begin(void) {
 }
 
 //Roger Clark. Two new begin functions has been added so that normal Arduino Sketches that use Serial.begin(xxx) will compile.
-void USBSerial::begin(unsigned long ignoreBaud) 
+void USBSerial::begin(unsigned long ignoreBaud)
 {
-volatile unsigned long removeCompilerWarningsIgnoreBaud=ignoreBaud;
+    volatile unsigned long removeCompilerWarningsIgnoreBaud = ignoreBaud;
 
-	ignoreBaud=removeCompilerWarningsIgnoreBaud;
+    ignoreBaud = removeCompilerWarningsIgnoreBaud;
 }
 void USBSerial::begin(unsigned long ignoreBaud, uint8_t ignore)
 {
-volatile unsigned long removeCompilerWarningsIgnoreBaud=ignoreBaud;
-volatile uint8_t removeCompilerWarningsIgnore=ignore;
+    volatile unsigned long removeCompilerWarningsIgnoreBaud = ignoreBaud;
+    volatile uint8_t removeCompilerWarningsIgnore = ignore;
 
-	ignoreBaud=removeCompilerWarningsIgnoreBaud;
-	ignore=removeCompilerWarningsIgnore;
+    ignoreBaud = removeCompilerWarningsIgnoreBaud;
+    ignore = removeCompilerWarningsIgnore;
 }
 
-void USBSerial::end(void) {
+void USBSerial::end(void)
+{
 #if BOARD_HAVE_SERIALUSB
     usb_cdcacm_disable(BOARD_USB_DISC_DEV, BOARD_USB_DISC_BIT);
     usb_cdcacm_remove_hooks(USB_CDCACM_HOOK_RX | USB_CDCACM_HOOK_IFACE_SETUP);
 #endif
 }
 
-size_t USBSerial::write(uint8 ch) {
-size_t n = 0;
+size_t USBSerial::write(uint8 ch)
+{
+    size_t n = 0;
     this->write(&ch, 1);
-		return n;
+    return n;
 }
 
-size_t USBSerial::write(const char *str) {
-size_t n = 0;
+size_t USBSerial::write(const char *str)
+{
+    size_t n = 0;
     this->write(str, strlen(str));
-	return n;
+    return n;
 }
 
-size_t USBSerial::write(const void *buf, uint32 len) {
-size_t n = 0;
+size_t USBSerial::write(const void *buf, uint32 len)
+{
+    size_t n = 0;
     if (!this->isConnected() || !buf) {
         return 0;
     }
@@ -130,45 +136,43 @@ size_t n = 0;
 // this code leads to a serious performance drop and appears to be
 // unnecessary - everything seems to work fine without, -jcw, 2015-11-05
 // see http://stm32duino.com/posting.php?mode=quote&f=3&p=7746
-	if (sent == USB_CDCACM_TX_EPSIZE) {
-	while (usb_cdcacm_is_transmitting() != 0) {
-	}
-	/* flush out to avoid having the pc wait for more data */
-	usb_cdcacm_tx(NULL, 0);
-	}
+    if (sent == USB_CDCACM_TX_EPSIZE) {
+        while (usb_cdcacm_is_transmitting() != 0) {
+        }
+        /* flush out to avoid having the pc wait for more data */
+        usb_cdcacm_tx(NULL, 0);
+    }
 #endif
-		return n;
+    return n;
 }
 
-int USBSerial::available(void) {
+int USBSerial::available(void)
+{
     return usb_cdcacm_data_available();
 }
 
 int USBSerial::peek(void)
 {
     uint8 b;
-	if (usb_cdcacm_peek(&b, 1)==1)
-	{
-		return b;
-	}
-	else
-	{
-		return -1;
-	}
+    if (usb_cdcacm_peek(&b, 1) == 1) {
+        return b;
+    } else {
+        return -1;
+    }
 }
 
 void USBSerial::flush(void)
 {
-/*Roger Clark. Rather slow method. Need to improve this */
+    /*Roger Clark. Rather slow method. Need to improve this */
     uint8 b;
-	while(usb_cdcacm_data_available())
-	{
-		this->read(&b, 1);
-	}
+    while (usb_cdcacm_data_available()) {
+        this->read(&b, 1);
+    }
     return;
 }
 
-uint32 USBSerial::read(void *buf, uint32 len) {
+uint32 USBSerial::read(void *buf, uint32 len)
+{
     if (!buf) {
         return 0;
     }
@@ -182,43 +186,45 @@ uint32 USBSerial::read(void *buf, uint32 len) {
 }
 
 /* Blocks forever until 1 byte is received */
-int USBSerial::read(void) {
+int USBSerial::read(void)
+{
     uint8 b;
-	/*
-	    this->read(&b, 1);
+    /*
+        this->read(&b, 1);
     return b;
-	*/
-	
-	if (usb_cdcacm_rx(&b, 1)==0)
-	{
-		return -1;
-	}
-	else
-	{
-		return b;
-	}
+    */
+
+    if (usb_cdcacm_rx(&b, 1) == 0) {
+        return -1;
+    } else {
+        return b;
+    }
 }
 
-uint8 USBSerial::pending(void) {
+uint8 USBSerial::pending(void)
+{
     return usb_cdcacm_get_pending();
 }
 
-uint8 USBSerial::isConnected(void) {
+uint8 USBSerial::isConnected(void)
+{
     return usb_is_connected(USBLIB) && usb_is_configured(USBLIB) && usb_cdcacm_get_dtr();
 }
 
-uint8 USBSerial::getDTR(void) {
+uint8 USBSerial::getDTR(void)
+{
     return usb_cdcacm_get_dtr();
 }
 
-uint8 USBSerial::getRTS(void) {
+uint8 USBSerial::getRTS(void)
+{
     return usb_cdcacm_get_rts();
 }
 
 #if BOARD_HAVE_SERIALUSB
-	#ifdef SERIAL_USB 
-		USBSerial Serial;
-	#endif
+#ifdef SERIAL_USB
+USBSerial Serial;
+#endif
 #endif
 
 /*
@@ -236,7 +242,8 @@ enum reset_state_t {
 
 static reset_state_t reset_state = DTR_UNSET;
 
-static void ifaceSetupHook(unsigned hook, void *requestvp) {
+static void ifaceSetupHook(unsigned hook, void *requestvp)
+{
     uint8 request = *(uint8*)requestvp;
 
     // Ignore requests we're not interested in.
@@ -244,7 +251,7 @@ static void ifaceSetupHook(unsigned hook, void *requestvp) {
         return;
     }
 
-#ifdef SERIAL_USB 
+#ifdef SERIAL_USB
     // We need to see a negative edge on DTR before we start looking
     // for the in-band magic reset byte sequence.
     uint8 dtr = usb_cdcacm_get_dtr();
@@ -273,24 +280,26 @@ static void ifaceSetupHook(unsigned hook, void *requestvp) {
     }
 #endif
 
-	if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
-		iwdg_init(IWDG_PRE_4, 10);
-		while (1);
-	}
+    if ((usb_cdcacm_get_baud() == 1200) && (reset_state == DTR_NEGEDGE)) {
+        iwdg_init(IWDG_PRE_4, 10);
+        while (1);
+    }
 }
 
 #define RESET_DELAY 100000
-#ifdef SERIAL_USB 
-static void wait_reset(void) {
-  delay_us(RESET_DELAY);
-  nvic_sys_reset();
+#ifdef SERIAL_USB
+static void wait_reset(void)
+{
+    delay_us(RESET_DELAY);
+    nvic_sys_reset();
 }
 #endif
 
 #define STACK_TOP 0x20000800
 #define EXC_RETURN 0xFFFFFFF9
 #define DEFAULT_CPSR 0x61000000
-static void rxHook(unsigned hook, void *ignored) {
+static void rxHook(unsigned hook, void *ignored)
+{
     /* FIXME this is mad buggy; we need a new reset sequence. E.g. NAK
      * after each RX means you can't reset if any bytes are waiting. */
     if (reset_state == DTR_NEGEDGE) {
@@ -298,14 +307,14 @@ static void rxHook(unsigned hook, void *ignored) {
 
         if (usb_cdcacm_data_available() >= 4) {
             // The magic reset sequence is "1EAF".
-#ifdef SERIAL_USB 
-            static const uint8 magic[4] = {'1', 'E', 'A', 'F'};	
+#ifdef SERIAL_USB
+            static const uint8 magic[4] = {'1', 'E', 'A', 'F'};
 #else
-	#if defined(BOOTLOADER_robotis)
-				static const uint8 magic[4] = {'C', 'M', '9', 'X'};
-	#else
-				static const uint8 magic[4] = {'1', 'E', 'A', 'F'};	
-	#endif			
+#if defined(BOOTLOADER_robotis)
+            static const uint8 magic[4] = {'C', 'M', '9', 'X'};
+#else
+            static const uint8 magic[4] = {'1', 'E', 'A', 'F'};
+#endif
 #endif
 
             uint8 chkBuf[4];
@@ -319,7 +328,7 @@ static void rxHook(unsigned hook, void *ignored) {
                 }
             }
 
-#ifdef SERIAL_USB 
+#ifdef SERIAL_USB
             // Got the magic sequence -> reset, presumably into the bootloader.
             // Return address is wait_reset, but we must set the thumb bit.
             uintptr_t target = (uintptr_t)wait_reset | 0x1;
@@ -340,9 +349,9 @@ static void rxHook(unsigned hook, void *ignored) {
                          "bx lr"
                          :
                          : [stack_top] "r" (STACK_TOP),
-                           [target_addr] "r" (target),
-                           [exc_return] "r" (EXC_RETURN),
-                           [cpsr] "r" (DEFAULT_CPSR)
+                         [target_addr] "r" (target),
+                         [exc_return] "r" (EXC_RETURN),
+                         [cpsr] "r" (DEFAULT_CPSR)
                          : "r0", "r1", "r2");
 #endif
 

@@ -264,7 +264,8 @@ void adc_calibrate(const adc_dev *dev);
  * @param enable If 1, conversion on external events is enabled; if 0,
  *               disabled.
  */
-static inline void adc_set_exttrig(const adc_dev *dev, uint8 enable) {
+static inline void adc_set_exttrig(const adc_dev *dev, uint8 enable)
+{
     *bb_perip(&dev->regs->CR2, ADC_CR2_EXTTRIG_BIT) = !!enable;
 }
 

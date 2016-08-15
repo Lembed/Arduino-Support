@@ -34,7 +34,7 @@
 #define _LIBMAPLE_STM32F1_USART_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 /*
@@ -49,6 +49,7 @@ struct usart_reg_map;
 #define USART2_BASE                     ((struct usart_reg_map*)0x40004400)
 /** USART3 register map base pointer */
 #define USART3_BASE                     ((struct usart_reg_map*)0x40004800)
+
 #ifdef STM32_HIGH_DENSITY
 /** UART4 register map base pointer */
 #define UART4_BASE                      ((struct usart_reg_map*)0x40004C00)

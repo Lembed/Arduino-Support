@@ -24,13 +24,15 @@
 #include "stdlib.h"
 #include "wirish_math.h"
 
-void randomSeed(unsigned int seed) {
+void randomSeed(unsigned int seed)
+{
     if (seed != 0) {
         srand(seed);
     }
 }
 
-long random(long howbig) {
+long random(long howbig)
+{
     if (howbig == 0) {
         return 0;
     }
@@ -38,7 +40,8 @@ long random(long howbig) {
     return rand() % howbig;
 }
 
-long random(long howsmall, long howbig) {
+long random(long howsmall, long howbig)
+{
     if (howsmall >= howbig) {
         return howsmall;
     }

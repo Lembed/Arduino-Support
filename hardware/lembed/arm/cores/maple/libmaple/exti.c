@@ -35,6 +35,10 @@
 #include <libmaple/nvic.h>
 #include <libmaple/bitband.h>
 
+#include <libmaple/gpio.h>
+#include "exti_private.h"
+
+
 static inline void dispatch_single_exti(uint32 exti_num);
 static inline void dispatch_extis(uint32 start, uint32 stop);
 
@@ -66,6 +70,11 @@ static exti_channel exti_channels[] = {
     { .handler = NULL, .arg = NULL },  // EXTI15
 };
 
+void exti_select(exti_num num, exti_cfg port)
+{
+    exti_do_select(&AFIO_BASE->EXTICR1 + num / 4, num, port);
+}
+
 /*
  * Portable routines
  */
@@ -89,7 +98,8 @@ static exti_channel exti_channels[] = {
 void exti_attach_interrupt(exti_num num,
                            exti_cfg port,
                            voidFuncPtr handler,
-                           exti_trigger_mode mode) {
+                           exti_trigger_mode mode)
+{
     // Call callback version with arg being null
     exti_attach_callback(num, port, (voidArgumentFuncPtr)handler, NULL, mode);
 }
@@ -115,7 +125,8 @@ void exti_attach_callback(exti_num num,
                           exti_cfg port,
                           voidArgumentFuncPtr handler,
                           void *arg,
-                          exti_trigger_mode mode) {
+                          exti_trigger_mode mode)
+{
     ASSERT(handler);
 
     /* Register the handler */
@@ -143,38 +154,37 @@ void exti_attach_callback(exti_num num,
     bb_peri_set_bit(&EXTI_BASE->IMR, num, 1);
 
     /* Enable the interrupt line */
-    switch(num)
-    {
-        case EXTI0:
-            nvic_irq_enable(NVIC_EXTI0);
-            break;
-        case EXTI1:
-            nvic_irq_enable(NVIC_EXTI1);
-            break;
-        case EXTI2:
-            nvic_irq_enable(NVIC_EXTI2);
-            break;
-        case EXTI3:
-            nvic_irq_enable(NVIC_EXTI3);
-            break;
-        case EXTI4:
-            nvic_irq_enable(NVIC_EXTI4);
-            break;
-        case EXTI5:
-        case EXTI6:
-        case EXTI7:
-        case EXTI8:
-        case EXTI9:
-            nvic_irq_enable(NVIC_EXTI_9_5);
-            break;
-        case EXTI10:
-        case EXTI11:
-        case EXTI12:
-        case EXTI13:
-        case EXTI14:
-        case EXTI15:
-            nvic_irq_enable(NVIC_EXTI_15_10);
-            break;
+    switch (num) {
+    case EXTI0:
+        nvic_irq_enable(NVIC_EXTI0);
+        break;
+    case EXTI1:
+        nvic_irq_enable(NVIC_EXTI1);
+        break;
+    case EXTI2:
+        nvic_irq_enable(NVIC_EXTI2);
+        break;
+    case EXTI3:
+        nvic_irq_enable(NVIC_EXTI3);
+        break;
+    case EXTI4:
+        nvic_irq_enable(NVIC_EXTI4);
+        break;
+    case EXTI5:
+    case EXTI6:
+    case EXTI7:
+    case EXTI8:
+    case EXTI9:
+        nvic_irq_enable(NVIC_EXTI_9_5);
+        break;
+    case EXTI10:
+    case EXTI11:
+    case EXTI12:
+    case EXTI13:
+    case EXTI14:
+    case EXTI15:
+        nvic_irq_enable(NVIC_EXTI_15_10);
+        break;
     }
 }
 
@@ -183,7 +193,8 @@ void exti_attach_callback(exti_num num,
  * @param num External interrupt line to disable.
  * @see exti_num
  */
-void exti_detach_interrupt(exti_num num) {
+void exti_detach_interrupt(exti_num num)
+{
     /* First, mask the interrupt request */
     bb_peri_set_bit(&EXTI_BASE->IMR, num, 0);
 
@@ -200,7 +211,8 @@ void exti_detach_interrupt(exti_num num) {
  * Private routines
  */
 
-void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port) {
+void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port)
+{
     uint32 shift = 4 * (num % 4);
     uint32 cr = *exti_cr;
     cr &= ~(0xF << shift);
@@ -212,31 +224,38 @@ void exti_do_select(__io uint32 *exti_cr, exti_num num, exti_cfg port) {
  * Interrupt handlers
  */
 
-void __irq_exti0(void) {
+void __irq_exti0(void)
+{
     dispatch_single_exti(EXTI0);
 }
 
-void __irq_exti1(void) {
+void __irq_exti1(void)
+{
     dispatch_single_exti(EXTI1);
 }
 
-void __irq_exti2(void) {
+void __irq_exti2(void)
+{
     dispatch_single_exti(EXTI2);
 }
 
-void __irq_exti3(void) {
+void __irq_exti3(void)
+{
     dispatch_single_exti(EXTI3);
 }
 
-void __irq_exti4(void) {
+void __irq_exti4(void)
+{
     dispatch_single_exti(EXTI4);
 }
 
-void __irq_exti9_5(void) {
+void __irq_exti9_5(void)
+{
     dispatch_extis(5, 9);
 }
 
-void __irq_exti15_10(void) {
+void __irq_exti15_10(void)
+{
     dispatch_extis(10, 15);
 }
 
@@ -250,7 +269,8 @@ void __irq_exti15_10(void) {
  * won't actually be cleared in time and the ISR will fire again.  To
  * compensate, this function NOPs for 2 cycles after clearing the
  * pending bits to ensure it takes effect. */
-static inline __always_inline void clear_pending_msk(uint32 exti_msk) {
+static inline __always_inline void clear_pending_msk(uint32 exti_msk)
+{
     EXTI_BASE->PR = exti_msk;
     asm volatile("nop");
     asm volatile("nop");
@@ -258,7 +278,8 @@ static inline __always_inline void clear_pending_msk(uint32 exti_msk) {
 
 /* This dispatch routine is for non-multiplexed EXTI lines only; i.e.,
  * it doesn't check EXTI_PR. */
-static inline __always_inline void dispatch_single_exti(uint32 exti) {
+static inline __always_inline void dispatch_single_exti(uint32 exti)
+{
     voidArgumentFuncPtr handler = exti_channels[exti].handler;
 
     if (!handler) {
@@ -270,7 +291,8 @@ static inline __always_inline void dispatch_single_exti(uint32 exti) {
 }
 
 /* Dispatch routine for EXTIs which share an IRQ. */
-static inline __always_inline void dispatch_extis(uint32 start, uint32 stop) {
+static inline __always_inline void dispatch_extis(uint32 start, uint32 stop)
+{
     uint32 pr = EXTI_BASE->PR;
     uint32 handled_msk = 0;
     uint32 exti;

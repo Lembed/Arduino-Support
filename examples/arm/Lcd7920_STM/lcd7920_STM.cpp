@@ -35,30 +35,27 @@ Lcd7920::Lcd7920(uint8_t cPin, uint8_t dPin, bool spi) : clockPin(cPin), dataPin
 
 size_t Lcd7920::write(uint8_t ch)
 {
-  if (gfxMode)
-  {
-    if (currentFont == 0)
-    { 
-      return 0; 
+  if (gfxMode) {
+    if (currentFont == 0) {
+      return 0;
     }
     const uint8_t startChar = pgm_read_byte_near(&(currentFont->startCharacter));
     const uint8_t endChar = pgm_read_byte_near(&(currentFont->endCharacter));
-    
-    if (ch < startChar || ch > endChar)
-    {
+
+    if (ch < startChar || ch > endChar) {
       return 0;
     }
-    
+
     const uint8_t fontWidth = pgm_read_byte_near(&(currentFont->width));
     const uint8_t fontHeight = pgm_read_byte_near(&(currentFont->height));
-    const uint8_t bytesPerColumn = (fontHeight + 7)/8;
+    const uint8_t bytesPerColumn = (fontHeight + 7) / 8;
     const uint8_t bytesPerChar = (bytesPerColumn * fontWidth) + 1;
     PROGMEM const uint8_t  *fontPtr = (PROGMEM const uint8_t*)pgm_read_word_near(&(currentFont->ptr)) + (bytesPerChar * (ch - startChar));
     uint16_t cmask = (1 << fontHeight) - 1;
-    
+
     uint8_t nCols = pgm_read_byte_near(fontPtr++);
 
-    // Update dirty rectangle coordinates, except for endCol which we do at the end      
+    // Update dirty rectangle coordinates, except for endCol which we do at the end
     {
       if (startRow > row) { startRow = row; }
       if (startCol > column) { startCol = column; }
@@ -70,81 +67,60 @@ size_t Lcd7920::write(uint8_t ch)
     // Decide whether to add a space column first (auto-kerning)
     // We don't add a space column before a space character.
     // We add a space column after a space character if we would have added one between the preceding and following characters.
-    if (column != numCols)
-    {
+    if (column != numCols) {
       uint16_t thisCharColData = pgm_read_word_near(fontPtr) & cmask;    // atmega328p is little-endian
-      if (thisCharColData == 0)  // for characters with deliberate space row at the start, e.g. decimal point
-      {
+      if (thisCharColData == 0) { // for characters with deliberate space row at the start, e.g. decimal point
         thisCharColData = pgm_read_word_near(fontPtr + 2) & cmask;
       }
       bool wantSpace = ((thisCharColData | (thisCharColData << 1)) & (lastCharColData | (lastCharColData << 1))) != 0;
-      if (wantSpace)
-      {
+      if (wantSpace) {
         // Add space after character
         uint8_t mask = 0x80 >> (column & 7);
-        uint8_t *p = image + ((row * (numCols/8)) + (column/8));
-        for (uint8_t i = 0; i < fontHeight && p < (image + sizeof(image)); ++i)
-        {
-          if (textInverted)
-          {
+        uint8_t *p = image + ((row * (numCols / 8)) + (column / 8));
+        for (uint8_t i = 0; i < fontHeight && p < (image + sizeof(image)); ++i) {
+          if (textInverted) {
             *p |= mask;
-          }
-          else
-          {
+          } else {
             *p &= ~mask;
           }
-          p += (numCols/8);
+          p += (numCols / 8);
         }
         ++column;
-      }      
+      }
     }
-    
-    while (nCols != 0 && column < numCols)
-    {
+
+    while (nCols != 0 && column < numCols) {
       uint16_t colData = pgm_read_word_near(fontPtr);
       fontPtr += bytesPerColumn;
-      if (colData != 0)
-      {
+      if (colData != 0) {
         lastCharColData = colData & cmask;
       }
       uint8_t mask1 = 0x80 >> (column & 7);
       uint8_t mask2 = ~mask1;
-      uint8_t *p = image + ((row * (numCols/8)) + (column/8));
+      uint8_t *p = image + ((row * (numCols / 8)) + (column / 8));
       const uint16_t setPixelVal = (textInverted) ? 0 : 1;
-      for (uint8_t i = 0; i < fontHeight && p < (image + sizeof(image)); ++i)
-      {
-        if ((colData & 1) == setPixelVal)
-        {
+      for (uint8_t i = 0; i < fontHeight && p < (image + sizeof(image)); ++i) {
+        if ((colData & 1) == setPixelVal) {
           *p |= mask1;      // set pixel
-        }
-        else
-        {
+        } else {
           *p &= mask2;     // clear pixel
         }
         colData >>= 1;
-        p += (numCols/8);
+        p += (numCols / 8);
       }
       --nCols;
       ++column;
     }
-    
+
     if (column > endCol) { endCol = column; }
-  }
-  else
-  {
+  } else {
     // Alphanumeric mode
-    if (ch == '\r')
-    {
+    if (ch == '\r') {
       setCursor(0, column);
-    }
-    else if (ch == '\n')
-    {
+    } else if (ch == '\n') {
       setCursor(0, row + 1);
-    }
-    else
-    {
-      if (column == 16)
-      {
+    } else {
+      if (column == 16) {
         setCursor(row + 1, 0);
       }
       sendLcdData(ch);
@@ -158,8 +134,7 @@ size_t Lcd7920::write(uint8_t ch)
 // Select normal or inverted text (only works in graphics mode)
 void Lcd7920::textInvert(bool b)
 {
-  if (b != textInverted)
-  {
+  if (b != textInverted) {
     textInverted = b;
     lastCharColData = 0xFFFF;    // always need space between inverted and non-inverted text
   }
@@ -168,17 +143,16 @@ void Lcd7920::textInvert(bool b)
 // NB - if using SPI then the SS pin must be set to be an output before calling this!
 void Lcd7920::begin(bool gmode)
 {
-  
+
   // Set up the SPI interface for talking to the LCD. We have to set MOSI, SCLK and SS to outputs, then enable SPI.
   digitalWrite(clockPin, LOW);
   digitalWrite(dataPin, LOW);
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
-  
-  if (useSpi)
-  {
-      delay(1); //dummy
-   // SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);  // enable SPI, master mode, clock low when idle, data sampled on rising edge, clock = f/16 (= 1MHz), send MSB first
+
+  if (useSpi) {
+    delay(1); //dummy
+    // SPCR = (1 << SPE) | (1 << MSTR) | (1 << SPR0);  // enable SPI, master mode, clock low when idle, data sampled on rising edge, clock = f/16 (= 1MHz), send MSB first
     //SPSR = (1 << SPI2X);  // double the speed to 2MHz (optional)
   }
 
@@ -192,8 +166,7 @@ void Lcd7920::begin(bool gmode)
   extendedMode = false;
 
   clear();    // clear alpha ram
-  if (gmode)
-  {
+  if (gmode) {
     gfxMode = true;
     clear();  // clear gfx ram
   }
@@ -211,8 +184,7 @@ void Lcd7920::setFont(const PROGMEM LcdFont *newFont)
 
 void Lcd7920::clear()
 {
-  if (gfxMode)
-  {
+  if (gfxMode) {
     memset(image, 0, sizeof(image));
     // flag whole image as dirty and update
     startRow = 0;
@@ -220,9 +192,7 @@ void Lcd7920::clear()
     startCol = 0;
     endCol = numCols;
     flush();
-  }
-  else
-  {
+  } else {
     ensureBasicMode();
     sendLcdCommand(LcdDisplayClear);
     delay(LcdDisplayClearDelayMillis);
@@ -239,19 +209,16 @@ void Lcd7920::line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, PixelMode mod
   int sx = (x0 < x1) ? 1 : -1;
   int sy = (y0 < y1) ? 1 : -1;
   int err = dx - dy;
- 
-  for (;;)
-  {
+
+  for (;;) {
     setPixel(x0, y0, mode);
     if (x0 == x1 && y0 == y1) break;
     int e2 = err + err;
-    if (e2 > -dy)
-    { 
+    if (e2 > -dy) {
       err -= dy;
       x0 += sx;
     }
-    if (e2 < dx)
-    { 
+    if (e2 < dx) {
       err += dx;
       y0 += sy;
     }
@@ -259,40 +226,37 @@ void Lcd7920::line(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, PixelMode mod
 }
 void Lcd7920::fastHline(uint8_t x0, uint8_t y0, uint8_t x1, PixelMode mode)
 {
-    for (byte xx=0;xx< x1;xx++)
-    {
-    setPixel(x0+xx, y0, mode);
-    }
+  for (byte xx = 0; xx < x1; xx++) {
+    setPixel(x0 + xx, y0, mode);
+  }
 }
 void Lcd7920::fastVline(uint8_t x0, uint8_t y0, uint8_t y1, PixelMode mode)
 {
-    for (byte yy=0;yy< y1;yy++)
-    {
-        setPixel(x0, y0+yy, mode);
-    }
+  for (byte yy = 0; yy < y1; yy++) {
+    setPixel(x0, y0 + yy, mode);
+  }
 }
 // draw simple box - x0,y0=start, x1,y1-length in pixel
 void Lcd7920::box(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, PixelMode mode)
 {
-    //line( x0,  y0,  x0+x1, y0,  mode);
-    fastHline(x0,y0,x1,  mode);
-    fastHline(x0,y0+y1,x1,  mode);
-   // line( x0,  y0+y1,  x0+x1, y0+y1,  mode);
-    //line( x0,  y0+1,  x0, y0+y1-1,  mode);
-    fastVline(x0,y0+1,y1-1,  mode);
-    fastVline(x0+x1-1,y0+1,y1-1,  mode);
-    //line( x0+x1,  y0+1,  x0+x1, y0+y1-1,  mode);
-    //line( x0,  y0,  x0+x1, y0+y1,  mode);
+  //line( x0,  y0,  x0+x1, y0,  mode);
+  fastHline(x0, y0, x1,  mode);
+  fastHline(x0, y0 + y1, x1,  mode);
+  // line( x0,  y0+y1,  x0+x1, y0+y1,  mode);
+  //line( x0,  y0+1,  x0, y0+y1-1,  mode);
+  fastVline(x0, y0 + 1, y1 - 1,  mode);
+  fastVline(x0 + x1 - 1, y0 + 1, y1 - 1,  mode);
+  //line( x0+x1,  y0+1,  x0+x1, y0+y1-1,  mode);
+  //line( x0,  y0,  x0+x1, y0+y1,  mode);
 }
 
 //draw full box
 void Lcd7920::fillbox(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, PixelMode mode)
 {
-    for (byte x=0;x<y1;x++)
-    {
-     //line( x0,  y0+x,  x0+x1, y0+x,  mode);
-        fastHline(x0,y0+x,x1,  mode);
-    }
+  for (byte x = 0; x < y1; x++) {
+    //line( x0,  y0+x,  x0+x1, y0+x,  mode);
+    fastHline(x0, y0 + x, x1,  mode);
+  }
 }
 
 // Draw a circle using the Bresenham Algorithm (thanks Wikipedia)
@@ -303,26 +267,24 @@ void Lcd7920::circle(uint8_t x0, uint8_t y0, uint8_t radius, PixelMode mode)
   int ddF_y = -2 * (int)radius;
   int x = 0;
   int y = radius;
- 
+
   setPixel(x0, y0 + radius, mode);
   setPixel(x0, y0 - radius, mode);
   setPixel(x0 + radius, y0, mode);
   setPixel(x0 - radius, y0, mode);
- 
-  while(x < y)
-  {
+
+  while (x < y) {
     // keep ddF_x == 2 * x + 1;
     // keep ddF_y == -2 * y;
     // keep f == x*x + y*y - radius*radius + 2*x - y + 1;
-    if(f >= 0) 
-    {
+    if (f >= 0) {
       y--;
       ddF_y += 2;
       f += ddF_y;
     }
     x++;
     ddF_x += 2;
-    f += ddF_x;    
+    f += ddF_x;
     setPixel(x0 + x, y0 + y, mode);
     setPixel(x0 - x, y0 + y, mode);
     setPixel(x0 + x, y0 - y, mode);
@@ -337,12 +299,10 @@ void Lcd7920::circle(uint8_t x0, uint8_t y0, uint8_t radius, PixelMode mode)
 // Draw a bitmap
 void Lcd7920::bitmap(uint8_t x0, uint8_t y0, uint8_t width, uint8_t height, PROGMEM const uint8_t data[])
 {
-  for (uint8_t r = 0; r < height && r + y0 < numRows; ++r)
-  {
-    uint8_t *p = image + (((r + y0) * (numCols/8)) + (x0/8));
-    uint16_t bitMapOffset = r * (width/8);
-    for (uint8_t c = 0; c < (width/8) && c + (x0/8) < numCols/8; ++c)
-    {
+  for (uint8_t r = 0; r < height && r + y0 < numRows; ++r) {
+    uint8_t *p = image + (((r + y0) * (numCols / 8)) + (x0 / 8));
+    uint16_t bitMapOffset = r * (width / 8);
+    for (uint8_t c = 0; c < (width / 8) && c + (x0 / 8) < numCols / 8; ++c) {
       *p++ = pgm_read_byte_near(bitMapOffset++);
     }
   }
@@ -355,16 +315,13 @@ void Lcd7920::bitmap(uint8_t x0, uint8_t y0, uint8_t width, uint8_t height, PROG
 // Flush the dirty part of the image to the lcd
 void Lcd7920::flush()
 {
-  if (gfxMode && endCol > startCol && endRow > startRow)
-  {
-    uint8_t startColNum = startCol/16;
-    uint8_t endColNum = (endCol + 15)/16;
-    for (uint8_t r = startRow; r < endRow; ++r)
-    {
+  if (gfxMode && endCol > startCol && endRow > startRow) {
+    uint8_t startColNum = startCol / 16;
+    uint8_t endColNum = (endCol + 15) / 16;
+    for (uint8_t r = startRow; r < endRow; ++r) {
       setGraphicsAddress(r, startColNum);
       uint8_t *ptr = image + ((16 * r) + (2 * startColNum));
-      for (uint8_t i = startColNum; i < endColNum; ++i)
-      {      
+      for (uint8_t i = startColNum; i < endColNum; ++i) {
         sendLcdData(*ptr++);
         //commandDelay();    // don't seem to need a delay here
         sendLcdData(*ptr++);
@@ -381,41 +338,36 @@ void Lcd7920::flush()
 // Set the cursor position. We can only set alternate columns. The row addressing is rather odd.
 void Lcd7920::setCursor(uint8_t r, uint8_t c)
 {
-  if (gfxMode)
-  {
+  if (gfxMode) {
     row = r % numRows;
     column = c % numCols;
     lastCharColData = 0u;    // flag that we just set the cursor position, so no space before next character
-  }
-  else
-  {
+  } else {
     row = r % 4;
     column = c % 16;
     ensureBasicMode();
-    sendLcdCommand(LcdSetDdramAddress + ((row & 1) * 0x10) + (column/2) + (row >> 1) * 8);
+    sendLcdCommand(LcdSetDdramAddress + ((row & 1) * 0x10) + (column / 2) + (row >> 1) * 8);
     commandDelay();
   }
 }
 
 void Lcd7920::setPixel(uint8_t x, uint8_t y, PixelMode mode)
 {
-  if (y < numRows && x < numCols)
-  {
-    uint8_t *p = image + ((y * (numCols/8)) + (x/8));
-    uint8_t mask = 0x80u >> (x%8);
-    switch(mode)
-    {
-      case PixelClear:
-        *p &= ~mask;
-        break;
-      case PixelSet:
-        *p |= mask;
-        break;
-      case PixelFlip:
-        *p ^= mask;
-        break;
+  if (y < numRows && x < numCols) {
+    uint8_t *p = image + ((y * (numCols / 8)) + (x / 8));
+    uint8_t mask = 0x80u >> (x % 8);
+    switch (mode) {
+    case PixelClear:
+      *p &= ~mask;
+      break;
+    case PixelSet:
+      *p |= mask;
+      break;
+    case PixelFlip:
+      *p ^= mask;
+      break;
     }
-    
+
     // Change the dirty rectangle to account for a pixel being dirty (we assume it was changed)
     if (startRow > y) { startRow = y; }
     if (endRow <= y)  { endRow = y + 1; }
@@ -426,18 +378,16 @@ void Lcd7920::setPixel(uint8_t x, uint8_t y, PixelMode mode)
 
 bool Lcd7920::readPixel(uint8_t x, uint8_t y)
 {
-  if (y < numRows && x < numCols)
-  {
-    uint8_t *p = image + ((y * (numCols/8)) + (x/8));
-    return (*p & (0x80u >> (x%8))) != 0;
+  if (y < numRows && x < numCols) {
+    uint8_t *p = image + ((y * (numCols / 8)) + (x / 8));
+    return (*p & (0x80u >> (x % 8))) != 0;
   }
   return false;
 }
 
 void Lcd7920::setGraphicsAddress(unsigned int r, unsigned int c)
 {
-  if (gfxMode)
-  {
+  if (gfxMode) {
     ensureExtendedMode();
     sendLcdCommand(LcdSetGdramAddress | (r & 31));
     //commandDelay();  // don't seem to need this one
@@ -466,20 +416,17 @@ void Lcd7920::sendLcdData(uint8_t data)
 // Send a command to the lcd. Data1 is sent as-is, data2 is split into 2 bytes, high nibble first.
 void Lcd7920::sendLcd(uint8_t data1, uint8_t data2)
 {
-  if (useSpi)
-  {
-      delay(1); // dummy
-      /*
+  if (useSpi) {
+    delay(1); // dummy
+    /*
     SPDR = data1;
     while ((SPSR & (1 << SPIF)) == 0) { }
     SPDR = data2 & 0xF0;
     while ((SPSR & (1 << SPIF)) == 0) { }
     SPDR = data2 << 4;
     while ((SPSR & (1 << SPIF)) == 0) { }
-       */
-  }
-  else
-  {
+     */
+  } else {
     sendLcdSlow(data1);
     sendLcdSlow(data2 & 0xF0);
     sendLcdSlow(data2 << 4);
@@ -488,66 +435,64 @@ void Lcd7920::sendLcd(uint8_t data1, uint8_t data2)
 
 void Lcd7920::sendLcdSlow(uint8_t data)
 {
-    /*
-#if 1
+  /*
+  #if 1
 
   // Fast shiftOut function
   volatile uint32_t *sclkPort = portOutputRegister(digitalPinToPort(clockPin));
   volatile uint32_t *mosiPort = portOutputRegister(digitalPinToPort(dataPin));
   uint8_t sclkMask = digitalPinToBitMask(clockPin);
   uint8_t mosiMask = digitalPinToBitMask(dataPin);
-  
+
   uint8_t oldSREG = SREG;
   cli();
   for (uint8_t i = 0; i < 8; ++i)
   {
-    if (data & 0x80)
-    {
-      *mosiPort |= mosiMask;
-    }
-    else
-    {
-      *mosiPort &= ~mosiMask;
-    }
-    *sclkPort |= sclkMask;
-    *sclkPort &= ~sclkMask;
-    data <<= 1;
+  if (data & 0x80)
+  {
+    *mosiPort |= mosiMask;
+  }
+  else
+  {
+    *mosiPort &= ~mosiMask;
+  }
+  *sclkPort |= sclkMask;
+  *sclkPort &= ~sclkMask;
+  data <<= 1;
   }
   SREG = oldSREG;
-  
- #else
- */
+
+  #else
+  */
   // really slow version, like Arduino shiftOut function
- 
-  for (uint8_t i = 0; i < 8; ++i)
-  {
+
+  for (uint8_t i = 0; i < 8; ++i) {
     digitalWrite(dataPin, (data & 0x80) ? HIGH : LOW);
     //  mosifast((data & 0x80) ? HIGH : LOW); // faster
-   digitalWrite(clockPin, HIGH); // do not change to high speed!
-   digitalWrite(clockPin, LOW); // do not change to high speed pin change!
+    digitalWrite(clockPin, HIGH); // do not change to high speed!
+    digitalWrite(clockPin, LOW); // do not change to high speed pin change!
 
     data <<= 1;
- 
+
   }
-/*
-   
-    for (uint8_t i = 0; i < 8; ++i)
-    {
-        mosifast((data & 0x80) ? HIGH : LOW);
-       delayMicroseconds(1);
-        sckfast(HIGH);
-        sckfast(LOW);
-        data <<= 1;
-     }
-   */
-  
+  /*
+
+      for (uint8_t i = 0; i < 8; ++i)
+      {
+          mosifast((data & 0x80) ? HIGH : LOW);
+         delayMicroseconds(1);
+          sckfast(HIGH);
+          sckfast(LOW);
+          data <<= 1;
+       }
+     */
+
 //#endif
 }
 
 void Lcd7920::ensureBasicMode()
 {
-  if (extendedMode)
-  {
+  if (extendedMode) {
     sendLcdCommand(gfxMode ? LcdFunctionSetBasicGraphic : LcdFunctionSetBasicAlpha);
     commandDelay();
     extendedMode = false;
@@ -556,8 +501,7 @@ void Lcd7920::ensureBasicMode()
 
 void Lcd7920::ensureExtendedMode()
 {
-  if (!extendedMode)
-  {
+  if (!extendedMode) {
     sendLcdCommand(gfxMode ? LcdFunctionSetExtendedGraphic : LcdFunctionSetExtendedAlpha);
     commandDelay();
     extendedMode = true;

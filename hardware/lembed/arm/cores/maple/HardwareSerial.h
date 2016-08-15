@@ -48,8 +48,8 @@
  * the documentation accordingly.
  */
 
- 
- 
+
+
 // Define constants and variables for buffering incoming serial data.  We're
 // using a ring buffer (I think), in which head is the index of the location
 // to which to write the next incoming character and tail is the index of the
@@ -73,56 +73,57 @@ typedef uint16_t rx_buffer_index_t;
 #else
 typedef uint8_t rx_buffer_index_t;
 #endif
- 
+
 struct usart_dev;
 
 /* Roger Clark
  *
- * Added config defines from AVR 
+ * Added config defines from AVR
  * Note. The values will need to be changed to match STM32 USART config register values, these are just place holders.
  */
 // Define config for Serial.begin(baud, config);
 // Note. STM32 doesn't support as many different Serial modes as AVR or SAM cores.
 // The word legth bit M must be set when using parity bit.
 
-#define SERIAL_8N1	0B00000000
-#define SERIAL_8N2	0B00100000
-#define SERIAL_9N1	0B00001000
-#define SERIAL_9N2	0B00101000	
+#define SERIAL_8N1  0B00000000
+#define SERIAL_8N2  0B00100000
+#define SERIAL_9N1  0B00001000
+#define SERIAL_9N2  0B00101000
 
-#define SERIAL_8E1	0B00001010
-#define SERIAL_8E2	0B00101010
+#define SERIAL_8E1  0B00001010
+#define SERIAL_8E2  0B00101010
 /* not supported:
-#define SERIAL_9E1	0B00001010
-#define SERIAL_9E2	0B00101010
+#define SERIAL_9E1  0B00001010
+#define SERIAL_9E2  0B00101010
 */
-#define SERIAL_8O1	0B00001011
-#define SERIAL_8O2	0B00101011
+#define SERIAL_8O1  0B00001011
+#define SERIAL_8O2  0B00101011
 /* not supported:
-#define SERIAL_9O1	0B00001011
-#define SERIAL_9O2	0B00101011
+#define SERIAL_9O1  0B00001011
+#define SERIAL_9O2  0B00101011
 */
 
-/* Roger Clark 
+/* Roger Clark
  * Moved macros from hardwareSerial.cpp
  */
- 
+
 #define DEFINE_HWSERIAL(name, n)                                   \
-	HardwareSerial name(USART##n,                                  \
-						BOARD_USART##n##_TX_PIN,                   \
-						BOARD_USART##n##_RX_PIN)
+    HardwareSerial name(USART##n,                                  \
+                        BOARD_USART##n##_TX_PIN,                   \
+                        BOARD_USART##n##_RX_PIN)
 
 #define DEFINE_HWSERIAL_UART(name, n)                             \
-	HardwareSerial name(UART##n,                                  \
-						BOARD_USART##n##_TX_PIN,                   \
-						BOARD_USART##n##_RX_PIN)				
+    HardwareSerial name(UART##n,                                  \
+                        BOARD_USART##n##_TX_PIN,                   \
+                        BOARD_USART##n##_RX_PIN)
 
 
 /* Roger clark. Changed class inheritance from Print to Stream.
  * Also added new functions for peek() and availableForWrite()
  * Note. AvailableForWrite is only a stub function in the cpp
  */
-class HardwareSerial : public Stream {
+class HardwareSerial : public Stream
+{
 
 public:
     HardwareSerial(struct usart_dev *usart_device,
@@ -131,7 +132,7 @@ public:
 
     /* Set up/tear down */
     void begin(uint32 baud);
-    void begin(uint32 baud,uint8_t config);
+    void begin(uint32 baud, uint8_t config);
     void end();
     virtual int available(void);
     virtual int peek(void);
@@ -148,8 +149,8 @@ public:
     /* Pin accessors */
     int txPin(void) { return this->tx_pin; }
     int rxPin(void) { return this->rx_pin; }
-	
-	operator bool() { return true; }
+
+    operator bool() { return true; }
 
     /* Escape hatch into libmaple */
     /* FIXME [0.0.13] documentation */
@@ -158,8 +159,8 @@ private:
     struct usart_dev *usart_device;
     uint8 tx_pin;
     uint8 rx_pin;
-  protected:
-#if 0  
+protected:
+#if 0
     volatile uint8_t * const _ubrrh;
     volatile uint8_t * const _ubrrl;
     volatile uint8_t * const _ucsra;
@@ -172,53 +173,53 @@ private:
     volatile rx_buffer_index_t _rx_buffer_head;
     volatile rx_buffer_index_t _rx_buffer_tail;
     volatile tx_buffer_index_t _tx_buffer_head;
-    volatile tx_buffer_index_t _tx_buffer_tail;	
+    volatile tx_buffer_index_t _tx_buffer_tail;
     // Don't put any members after these buffers, since only the first
     // 32 bytes of this struct can be accessed quickly using the ldd
     // instruction.
     unsigned char _rx_buffer[SERIAL_RX_BUFFER_SIZE];
-    unsigned char _tx_buffer[SERIAL_TX_BUFFER_SIZE];	
+    unsigned char _tx_buffer[SERIAL_TX_BUFFER_SIZE];
 #endif
 };
 
-#ifdef SERIAL_USB 
-	#if BOARD_HAVE_USART1
-	extern HardwareSerial Serial1;
-	#endif
-	#if BOARD_HAVE_USART2
-	extern HardwareSerial Serial2;
-	#endif
-	#if BOARD_HAVE_USART3
-	extern HardwareSerial Serial3;
-	#endif
-	#if BOARD_HAVE_UART4
-	extern HardwareSerial Serial4;
-	#endif
-	#if BOARD_HAVE_UART5
-	extern HardwareSerial Serial5;
-	#endif
-	#if BOARD_HAVE_USART6
-	extern HardwareSerial Serial6;
-	#endif
+#ifdef SERIAL_USB
+#if BOARD_HAVE_USART1
+extern HardwareSerial Serial1;
+#endif
+#if BOARD_HAVE_USART2
+extern HardwareSerial Serial2;
+#endif
+#if BOARD_HAVE_USART3
+extern HardwareSerial Serial3;
+#endif
+#if BOARD_HAVE_UART4
+extern HardwareSerial Serial4;
+#endif
+#if BOARD_HAVE_UART5
+extern HardwareSerial Serial5;
+#endif
+#if BOARD_HAVE_USART6
+extern HardwareSerial Serial6;
+#endif
 #else
-	#if BOARD_HAVE_USART1
-	extern HardwareSerial Serial;
-	#endif
-	#if BOARD_HAVE_USART2
-	extern HardwareSerial Serial1;
-	#endif
-	#if BOARD_HAVE_USART3
-	extern HardwareSerial Serial2;
-	#endif
-	#if BOARD_HAVE_UART4
-	extern HardwareSerial Serial3;
-	#endif
-	#if BOARD_HAVE_UART5
-	extern HardwareSerial Serial4;
-	#endif
-	#if BOARD_HAVE_USART6
-	extern HardwareSerial Serial5;
-	#endif
+#if BOARD_HAVE_USART1
+extern HardwareSerial Serial;
+#endif
+#if BOARD_HAVE_USART2
+extern HardwareSerial Serial1;
+#endif
+#if BOARD_HAVE_USART3
+extern HardwareSerial Serial2;
+#endif
+#if BOARD_HAVE_UART4
+extern HardwareSerial Serial3;
+#endif
+#if BOARD_HAVE_UART5
+extern HardwareSerial Serial4;
+#endif
+#if BOARD_HAVE_USART6
+extern HardwareSerial Serial5;
+#endif
 #endif
 
 #endif

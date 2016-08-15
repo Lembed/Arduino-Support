@@ -35,6 +35,34 @@
 #include <libmaple/adc.h>
 #include <libmaple/libmaple.h>
 #include <libmaple/rcc.h>
+#include <libmaple/gpio.h>
+
+/*
+ * Devices
+ */
+
+adc_dev adc1 = {
+    .regs   = ADC1_BASE,
+    .clk_id = RCC_ADC1,
+};
+/** ADC1 device. */
+const adc_dev *ADC1 = &adc1;
+
+adc_dev adc2 = {
+    .regs   = ADC2_BASE,
+    .clk_id = RCC_ADC2,
+};
+/** ADC2 device. */
+const adc_dev *ADC2 = &adc2;
+
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
+adc_dev adc3 = {
+    .regs   = ADC3_BASE,
+    .clk_id = RCC_ADC3,
+};
+/** ADC3 device. */
+const adc_dev *ADC3 = &adc3;
+#endif
 
 /**
  * @brief Initialize an ADC peripheral.
@@ -44,7 +72,8 @@
  *
  * @param dev ADC peripheral to initialize
  */
-void adc_init(const adc_dev *dev) {
+void adc_init(const adc_dev *dev)
+{
     rcc_clk_enable(dev->clk_id);
     rcc_reset_dev(dev->clk_id);
 }
@@ -55,7 +84,8 @@ void adc_init(const adc_dev *dev) {
  * @param event Event used to trigger the start of conversion.
  * @see adc_extsel_event
  */
-void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
+void adc_set_extsel(const adc_dev *dev, adc_extsel_event event)
+{
     uint32 cr2 = dev->regs->CR2;
     cr2 &= ~ADC_CR2_EXTSEL;
     cr2 |= event;
@@ -71,7 +101,8 @@ void adc_set_extsel(const adc_dev *dev, adc_extsel_event event) {
  * @param smp_rate sample rate to set
  * @see adc_smp_rate
  */
-void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate) {
+void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate)
+{
     uint32 adc_smpr1_val = 0, adc_smpr2_val = 0;
     int i;
 
@@ -95,7 +126,8 @@ void adc_set_sample_rate(const adc_dev *dev, adc_smp_rate smp_rate) {
  * @param channel channel to convert
  * @return conversion result
  */
-uint16 adc_read(const adc_dev *dev, uint8 channel) {
+uint16 adc_read(const adc_dev *dev, uint8 channel)
+{
     adc_reg_map *regs = dev->regs;
 
     adc_set_reg_seqlen(dev, 1);
@@ -106,4 +138,61 @@ uint16 adc_read(const adc_dev *dev, uint8 channel) {
         ;
 
     return (uint16)(regs->DR & ADC_DR_DATA);
+}
+
+/*
+ * STM32F1 routines
+ */
+
+/**
+ * @brief Calibrate an ADC peripheral
+ *
+ * Availability: STM32F1.
+ *
+ * @param dev adc device
+ */
+void adc_calibrate(const adc_dev *dev)
+{
+    __io uint32 *rstcal_bit = bb_perip(&(dev->regs->CR2), 3);
+    __io uint32 *cal_bit = bb_perip(&(dev->regs->CR2), 2);
+
+    *rstcal_bit = 1;
+    while (*rstcal_bit)
+        ;
+
+    *cal_bit = 1;
+    while (*cal_bit)
+        ;
+}
+
+/*
+ * Common routines
+ */
+
+void adc_set_prescaler(adc_prescaler pre)
+{
+    rcc_set_prescaler(RCC_PRESCALER_ADC, (uint32)pre);
+}
+
+void adc_foreach(void (*fn)(const adc_dev*))
+{
+    fn(ADC1);
+    fn(ADC2);
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
+    fn(ADC3);
+#endif
+}
+
+void adc_config_gpio(const adc_dev *ignored, gpio_dev *gdev, uint8 bit)
+{
+    gpio_set_mode(gdev, bit, GPIO_INPUT_ANALOG);
+}
+
+void adc_enable_single_swstart(const adc_dev *dev)
+{
+    adc_init(dev);
+    adc_set_extsel(dev, ADC_SWSTART);
+    adc_set_exttrig(dev, 1);
+    adc_enable(dev);
+    adc_calibrate(dev);
 }

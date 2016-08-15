@@ -37,11 +37,12 @@
 /* Unlike Wiring and Arduino, this assumes that the pin's mode is set
  * to INPUT_ANALOG. That's faster, but it does require some extra work
  * on the user's part. Not too much, we think ;). */
-uint16 analogRead(uint8 pin) {
-    const adc_dev *dev = PIN_MAP[pin].adc_device;
-    if (dev == NULL) {
-        return 0;
-    }
+uint16 analogRead(uint8 pin)
+{
+	const adc_dev *dev = PIN_MAP[pin].adc_device;
+	if (dev == NULL) {
+		return 0;
+	}
 
-    return adc_read(dev, PIN_MAP[pin].adc_channel);
+	return adc_read(dev, PIN_MAP[pin].adc_channel);
 }

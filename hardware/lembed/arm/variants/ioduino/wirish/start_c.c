@@ -60,7 +60,8 @@ struct rom_img_cfg {
 
 extern char _lm_rom_img_cfgp;
 
-void __attribute__((noreturn)) start_c(void) {
+void __attribute__((noreturn)) start_c(void)
+{
     struct rom_img_cfg *img_cfg = (struct rom_img_cfg*)&_lm_rom_img_cfgp;
     int *src = img_cfg->img_start;
     int *dst = (int*)&__data_start__;
