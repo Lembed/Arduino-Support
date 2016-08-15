@@ -34,7 +34,7 @@
 #define _LIBMAPLE_STM32F1_RCC_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/libmaple_types.h>
@@ -528,13 +528,13 @@ typedef enum rcc_ahb_divider {
  * @brief STM32F1 USB prescaler dividers
  * @see rcc_set_prescaler()
  */
- /*
- Set and reset by software to control the USB clock prescaler value. The USB clock
+/*
+Set and reset by software to control the USB clock prescaler value. The USB clock
 must be 48MHz. These bits can’t be reset if the USB clock is enabled.
 00: (CK_PLL / 1.5) selected
 01: CK_PLL selected
- */
- 
+*/
+
 typedef enum rcc_usb_divider {
     RCC_USB_SYSCLK_DIV_1 = 0x1 << 22,
     RCC_USB_SYSCLK_DIV_1_5 = 0x0 << 22,
@@ -546,9 +546,10 @@ typedef enum rcc_usb_divider {
 /**
  * @brief Start the low speed internal oscillator
  */
-static inline void rcc_start_lsi(void) {
-	*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSION_BIT) = 1;
-	while (*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSIRDY_BIT) == 0);
+static inline void rcc_start_lsi(void)
+{
+    *bb_perip(&RCC_BASE->CSR, RCC_CSR_LSION_BIT) = 1;
+    while (*bb_perip(&RCC_BASE->CSR, RCC_CSR_LSIRDY_BIT) == 0);
 }
 
 /**
@@ -595,10 +596,11 @@ typedef enum rcc_pll_multiplier {
 /**
  * @brief Start the low speed external oscillatior
  */
-static inline void rcc_start_lse(void) {
-	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEBYP_BIT, 0);
-	bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEON_BIT, 1);
-	while (bb_peri_get_bit(&RCC_BASE->BDCR, RCC_BDCR_LSERDY_BIT ) == 0);
+static inline void rcc_start_lse(void)
+{
+    bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEBYP_BIT, 0);
+    bb_peri_set_bit(&RCC_BASE->BDCR, RCC_BDCR_LSEON_BIT, 1);
+    while (bb_peri_get_bit(&RCC_BASE->BDCR, RCC_BDCR_LSERDY_BIT ) == 0);
 }
 
 /**
@@ -607,15 +609,16 @@ static inline void rcc_start_lse(void) {
  * @see struct rcc_pll_cfg.
  */
 typedef struct stm32f1_rcc_pll_data {
-     rcc_pll_multiplier pll_mul; /**< PLL multiplication factor. */
+    rcc_pll_multiplier pll_mul; /**< PLL multiplication factor. */
 } stm32f1_rcc_pll_data;
 
 /*
  * Deprecated bits.
  */
-static inline void rcc_start_hse(void) {				// Added to support RTClock
-//	*bb_perip(&RCC_BASE->CR, RCC_CR_HSEON_BIT) = 1;
-	while (bb_peri_get_bit(&RCC_BASE->CR, RCC_CR_HSERDY_BIT) == 0);
+static inline void rcc_start_hse(void)                  // Added to support RTClock
+{
+//  *bb_perip(&RCC_BASE->CR, RCC_CR_HSEON_BIT) = 1;
+    while (bb_peri_get_bit(&RCC_BASE->CR, RCC_CR_HSERDY_BIT) == 0);
 }
 
 /**

@@ -47,7 +47,6 @@ build.upload_flags=
 build.extra_flags= {build.upload_flags} {build.cpu_flags} {build.hs_flag} {build.common_flags}
 
 
-
 # These can be overridden in platform.local.txt
 compiler.c.extra_flags=
 compiler.c.elf.extra_flags="-L{build.variant.path}/ld"
@@ -56,10 +55,7 @@ compiler.S.extra_flags=
 compiler.ar.extra_flags=
 compiler.elf2hex.extra_flags=
 
-
-compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/stm32f1/include"                                                           "-I{build.system.path}/libmaple/usb/stm32f1" "-I{build.system.path}/libmaple/usb/usb_lib" 
-
-
+compiler.libs.c.flags="-I{build.system.path}/libmaple" "-I{build.system.path}/libmaple/include" "-I{build.system.path}/libmaple/port/include"    "-I{build.system.path}/libmaple/usb/usb_lib" 
 
 
 # USB Flags

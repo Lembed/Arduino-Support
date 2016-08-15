@@ -45,11 +45,12 @@
  *                    FLASH_WAIT_STATE_0, FLASH_WAIT_STATE_1,
  *                    ..., FLASH_WAIT_STATE_7).
  */
-void flash_set_latency(uint32 wait_states) {
-    uint32 val = FLASH_BASE->ACR;
+void flash_set_latency(uint32 wait_states)
+{
+	uint32 val = FLASH_BASE->ACR;
 
-    val &= ~FLASH_ACR_LATENCY;
-    val |= wait_states;
+	val &= ~FLASH_ACR_LATENCY;
+	val |= wait_states;
 
-    FLASH_BASE->ACR = val;
+	FLASH_BASE->ACR = val;
 }

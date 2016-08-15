@@ -4,7 +4,7 @@ dirstack_$(sp)  := $(d)
 d               := $(dir)
 BUILDDIRS       += $(BUILD_PATH)/$(d)
 
-LIBMAPLE_INCLUDES := -I$(LIBMAPLE_PATH)/include -I$(LIBMAPLE_MODULE_SERIES)/include
+LIBMAPLE_INCLUDES := -I$(LIBMAPLE_PATH)/include -I$(LIBMAPLE_HARDWARE_PORT)/include
 LIBMAPLE_PRIVATE_INCLUDES := -I$(LIBMAPLE_PATH)
 
 # Local flags
@@ -28,10 +28,8 @@ cSRCS_$(d) += usart.c
 cSRCS_$(d) += usart_private.c
 cSRCS_$(d) += util.c
 sSRCS_$(d) := exc.S
-# I2C support must be ported to F2:
-ifeq ($(MCU_SERIES),stm32f1)
 cSRCS_$(d) += i2c.c
-endif
+
 
 cFILES_$(d) := $(cSRCS_$(d):%=$(d)/%)
 sFILES_$(d) := $(sSRCS_$(d):%=$(d)/%)

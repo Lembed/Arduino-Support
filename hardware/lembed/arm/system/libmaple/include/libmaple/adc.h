@@ -36,7 +36,7 @@
 #define _LIBMAPLE_ADC_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/libmaple.h>
@@ -102,8 +102,8 @@ typedef struct adc_dev {
  *   2, 4, 6, or 8) must provide the same tokens as enumerators, for
  *   portability.
  */
- 
- /* Roger clark. Replaced with line below #include <series/adc.h>*/
+
+/* Roger clark. Replaced with line below #include <series/adc.h>*/
 #include "stm32f1/include/series/adc.h"
 
 
@@ -295,7 +295,8 @@ extern void adc_enable_single_swstart(const adc_dev* dev);
  * @param dev ADC device.
  * @param length Regular channel sequence length, from 1 to 16.
  */
-static inline void adc_set_reg_seqlen(const adc_dev *dev, uint8 length) {
+static inline void adc_set_reg_seqlen(const adc_dev *dev, uint8 length)
+{
     uint32 tmp = dev->regs->SQR1;
     tmp &= ~ADC_SQR1_L;
     tmp |= (length - 1) << 20;
@@ -306,7 +307,8 @@ static inline void adc_set_reg_seqlen(const adc_dev *dev, uint8 length) {
  * @brief Enable an adc peripheral
  * @param dev ADC device to enable
  */
-static inline void adc_enable(const adc_dev *dev) {
+static inline void adc_enable(const adc_dev *dev)
+{
     *bb_perip(&dev->regs->CR2, ADC_CR2_ADON_BIT) = 1;
 }
 
@@ -314,14 +316,16 @@ static inline void adc_enable(const adc_dev *dev) {
  * @brief Disable an ADC peripheral
  * @param dev ADC device to disable
  */
-static inline void adc_disable(const adc_dev *dev) {
+static inline void adc_disable(const adc_dev *dev)
+{
     *bb_perip(&dev->regs->CR2, ADC_CR2_ADON_BIT) = 0;
 }
 
 /**
  * @brief Disable all ADC peripherals.
  */
-static inline void adc_disable_all(void) {
+static inline void adc_disable_all(void)
+{
     adc_foreach(adc_disable);
 }
 

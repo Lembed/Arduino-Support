@@ -44,7 +44,7 @@ extern "C" {
 #include <libmaple/libmaple_types.h>
 #include <libmaple/rcc.h>
 #include <libmaple/nvic.h>
- /* Roger clark. Replaced with line below #include <series/spi.h>*/
+/* Roger clark. Replaced with line below #include <series/spi.h>*/
 #include "stm32f1/include/series/spi.h"
 
 
@@ -54,15 +54,15 @@ extern "C" {
 
 /** SPI register map type. */
 typedef struct spi_reg_map {
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 SR;             /**< Status register */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 CRCPR;          /**< CRC polynomial register */
-    __io uint32 RXCRCR;         /**< RX CRC register */
-    __io uint32 TXCRCR;         /**< TX CRC register */
-    __io uint32 I2SCFGR;        /**< I2S configuration register */
-    __io uint32 I2SPR;          /**< I2S prescaler register */
+  __io uint32 CR1;            /**< Control register 1 */
+  __io uint32 CR2;            /**< Control register 2 */
+  __io uint32 SR;             /**< Status register */
+  __io uint32 DR;             /**< Data register */
+  __io uint32 CRCPR;          /**< CRC polynomial register */
+  __io uint32 RXCRCR;         /**< RX CRC register */
+  __io uint32 TXCRCR;         /**< TX CRC register */
+  __io uint32 I2SCFGR;        /**< I2S configuration register */
+  __io uint32 I2SPR;          /**< I2S prescaler register */
 } spi_reg_map;
 
 /*
@@ -203,9 +203,9 @@ typedef struct spi_reg_map {
 
 /** SPI device type */
 typedef struct spi_dev {
-    spi_reg_map *regs;          /**< Register map */
-    rcc_clk_id clk_id;          /**< RCC clock information */
-    nvic_irq_num irq_num;       /**< NVIC interrupt number */
+  spi_reg_map *regs;          /**< Register map */
+  rcc_clk_id clk_id;          /**< RCC clock information */
+  nvic_irq_num irq_num;       /**< NVIC interrupt number */
 } spi_dev;
 
 /*
@@ -244,19 +244,19 @@ extern void spi_config_gpios(spi_dev *dev,
  * data capture (the clock phase, or "CPHA").
  */
 typedef enum spi_mode {
-    /** Clock idles low, data captured on rising edge (first transition) */
-    SPI_MODE_LOW_RISING = 0,
-    /** Clock idles low, data captured on falling edge (second transition) */
-    SPI_MODE_LOW_FALLING = 1,
-    /** Clock idles high, data captured on falling edge (first transition) */
-    SPI_MODE_HIGH_FALLING = 2,
-    /** Clock idles high, data captured on rising edge (second transition) */
-    SPI_MODE_HIGH_RISING = 3,
+  /** Clock idles low, data captured on rising edge (first transition) */
+  SPI_MODE_LOW_RISING = 0,
+  /** Clock idles low, data captured on falling edge (second transition) */
+  SPI_MODE_LOW_FALLING = 1,
+  /** Clock idles high, data captured on falling edge (first transition) */
+  SPI_MODE_HIGH_FALLING = 2,
+  /** Clock idles high, data captured on rising edge (second transition) */
+  SPI_MODE_HIGH_RISING = 3,
 
-    SPI_MODE_0 = SPI_MODE_LOW_RISING,   /**< Same as SPI_MODE_LOW_RISING */
-    SPI_MODE_1 = SPI_MODE_LOW_FALLING,  /**< Same as SPI_MODE_LOW_FALLING */
-    SPI_MODE_2 = SPI_MODE_HIGH_FALLING, /**< Same as SPI_MODE_HIGH_FALLING */
-    SPI_MODE_3 = SPI_MODE_HIGH_RISING,  /**< Same as SPI_MODE_HIGH_RISING */
+  SPI_MODE_0 = SPI_MODE_LOW_RISING,   /**< Same as SPI_MODE_LOW_RISING */
+  SPI_MODE_1 = SPI_MODE_LOW_FALLING,  /**< Same as SPI_MODE_LOW_FALLING */
+  SPI_MODE_2 = SPI_MODE_HIGH_FALLING, /**< Same as SPI_MODE_HIGH_FALLING */
+  SPI_MODE_3 = SPI_MODE_HIGH_RISING,  /**< Same as SPI_MODE_HIGH_RISING */
 } spi_mode;
 
 /**
@@ -264,14 +264,14 @@ typedef enum spi_mode {
  *        PCLK clock frequency.
  */
 typedef enum spi_baud_rate {
-    SPI_BAUD_PCLK_DIV_2   = SPI_CR1_BR_PCLK_DIV_2,   /**< f_PCLK/2 */
-    SPI_BAUD_PCLK_DIV_4   = SPI_CR1_BR_PCLK_DIV_4,   /**< f_PCLK/4 */
-    SPI_BAUD_PCLK_DIV_8   = SPI_CR1_BR_PCLK_DIV_8,   /**< f_PCLK/8 */
-    SPI_BAUD_PCLK_DIV_16  = SPI_CR1_BR_PCLK_DIV_16,  /**< f_PCLK/16 */
-    SPI_BAUD_PCLK_DIV_32  = SPI_CR1_BR_PCLK_DIV_32,  /**< f_PCLK/32 */
-    SPI_BAUD_PCLK_DIV_64  = SPI_CR1_BR_PCLK_DIV_64,  /**< f_PCLK/64 */
-    SPI_BAUD_PCLK_DIV_128 = SPI_CR1_BR_PCLK_DIV_128, /**< f_PCLK/128 */
-    SPI_BAUD_PCLK_DIV_256 = SPI_CR1_BR_PCLK_DIV_256, /**< f_PCLK/256 */
+  SPI_BAUD_PCLK_DIV_2   = SPI_CR1_BR_PCLK_DIV_2,   /**< f_PCLK/2 */
+  SPI_BAUD_PCLK_DIV_4   = SPI_CR1_BR_PCLK_DIV_4,   /**< f_PCLK/4 */
+  SPI_BAUD_PCLK_DIV_8   = SPI_CR1_BR_PCLK_DIV_8,   /**< f_PCLK/8 */
+  SPI_BAUD_PCLK_DIV_16  = SPI_CR1_BR_PCLK_DIV_16,  /**< f_PCLK/16 */
+  SPI_BAUD_PCLK_DIV_32  = SPI_CR1_BR_PCLK_DIV_32,  /**< f_PCLK/32 */
+  SPI_BAUD_PCLK_DIV_64  = SPI_CR1_BR_PCLK_DIV_64,  /**< f_PCLK/64 */
+  SPI_BAUD_PCLK_DIV_128 = SPI_CR1_BR_PCLK_DIV_128, /**< f_PCLK/128 */
+  SPI_BAUD_PCLK_DIV_256 = SPI_CR1_BR_PCLK_DIV_256, /**< f_PCLK/256 */
 } spi_baud_rate;
 
 /**
@@ -280,23 +280,23 @@ typedef enum spi_baud_rate {
  * @see spi_slave_enable()
  */
 typedef enum spi_cfg_flag {
-    SPI_BIDIMODE   = SPI_CR1_BIDIMODE,   /**< Bidirectional mode enable */
-    SPI_BIDIOE     = SPI_CR1_BIDIOE,     /**< Output enable in bidirectional
+  SPI_BIDIMODE   = SPI_CR1_BIDIMODE,   /**< Bidirectional mode enable */
+  SPI_BIDIOE     = SPI_CR1_BIDIOE,     /**< Output enable in bidirectional
                                             mode */
-    SPI_CRCEN      = SPI_CR1_CRCEN,      /**< Cyclic redundancy check (CRC)
+  SPI_CRCEN      = SPI_CR1_CRCEN,      /**< Cyclic redundancy check (CRC)
                                             enable */
-    SPI_DFF_8_BIT  = SPI_CR1_DFF_8_BIT,  /**< 8-bit data frame format (this is
+  SPI_DFF_8_BIT  = SPI_CR1_DFF_8_BIT,  /**< 8-bit data frame format (this is
                                             the default) */
-    SPI_DFF_16_BIT = SPI_CR1_DFF_16_BIT, /**< 16-bit data frame format */
-    SPI_RX_ONLY    = SPI_CR1_RXONLY,     /**< Receive only */
-    SPI_SW_SLAVE   = SPI_CR1_SSM,        /**< Software slave management */
-    SPI_SOFT_SS    = SPI_CR1_SSI,        /**< Software (internal) slave
+  SPI_DFF_16_BIT = SPI_CR1_DFF_16_BIT, /**< 16-bit data frame format */
+  SPI_RX_ONLY    = SPI_CR1_RXONLY,     /**< Receive only */
+  SPI_SW_SLAVE   = SPI_CR1_SSM,        /**< Software slave management */
+  SPI_SOFT_SS    = SPI_CR1_SSI,        /**< Software (internal) slave
                                             select.  This flag only has an
                                             effect when used in combination
                                             with SPI_SW_SLAVE. */
-    SPI_FRAME_LSB  = SPI_CR1_LSBFIRST,   /**< LSB-first (little-endian) frame
+  SPI_FRAME_LSB  = SPI_CR1_LSBFIRST,   /**< LSB-first (little-endian) frame
                                             format */
-    SPI_FRAME_MSB  = 0,                  /**< MSB-first (big-endian) frame
+  SPI_FRAME_MSB  = 0,                  /**< MSB-first (big-endian) frame
                                             format (this is the default) */
 } spi_cfg_flag;
 
@@ -331,22 +331,24 @@ void spi_rx_dma_disable(spi_dev *dev);
  * @param dev SPI device
  * @return True, if and only if dev's peripheral is enabled.
  */
-static inline uint8 spi_is_enabled(spi_dev *dev) {
-    return dev->regs->CR1 & SPI_CR1_SPE_BIT;
+static inline uint8 spi_is_enabled(spi_dev *dev)
+{
+  return dev->regs->CR1 & SPI_CR1_SPE_BIT;
 }
 
 /**
  * @brief Disable all SPI peripherals
  */
-static inline void spi_peripheral_disable_all(void) {
-    spi_foreach(spi_peripheral_disable);
+static inline void spi_peripheral_disable_all(void)
+{
+  spi_foreach(spi_peripheral_disable);
 }
 
 /** Available SPI interrupts */
 typedef enum spi_interrupt {
-    SPI_TXE_INTERRUPT  = SPI_CR2_TXEIE,  /**< TX buffer empty interrupt */
-    SPI_RXNE_INTERRUPT = SPI_CR2_RXNEIE, /**< RX buffer not empty interrupt */
-    SPI_ERR_INTERRUPT  = SPI_CR2_ERRIE   /**<
+  SPI_TXE_INTERRUPT  = SPI_CR2_TXEIE,  /**< TX buffer empty interrupt */
+  SPI_RXNE_INTERRUPT = SPI_CR2_RXNEIE, /**< RX buffer not empty interrupt */
+  SPI_ERR_INTERRUPT  = SPI_CR2_ERRIE   /**<
                                           * Error interrupt (CRC, overrun,
                                           * and mode fault errors for SPI;
                                           * underrun, overrun errors for I2S)
@@ -367,9 +369,10 @@ typedef enum spi_interrupt {
  * @param interrupt_flags Bitwise OR of spi_interrupt values to enable
  * @see spi_interrupt
  */
-static inline void spi_irq_enable(spi_dev *dev, uint32 interrupt_flags) {
-    dev->regs->CR2 |= interrupt_flags;
-    nvic_irq_enable(dev->irq_num);
+static inline void spi_irq_enable(spi_dev *dev, uint32 interrupt_flags)
+{
+  dev->regs->CR2 |= interrupt_flags;
+  nvic_irq_enable(dev->irq_num);
 }
 
 /**
@@ -378,8 +381,9 @@ static inline void spi_irq_enable(spi_dev *dev, uint32 interrupt_flags) {
  * @param interrupt_flags Bitwise OR of spi_interrupt values to disable
  * @see spi_interrupt
  */
-static inline void spi_irq_disable(spi_dev *dev, uint32 interrupt_flags) {
-    dev->regs->CR2 &= ~interrupt_flags;
+static inline void spi_irq_disable(spi_dev *dev, uint32 interrupt_flags)
+{
+  dev->regs->CR2 &= ~interrupt_flags;
 }
 
 /**
@@ -389,10 +393,11 @@ static inline void spi_irq_disable(spi_dev *dev, uint32 interrupt_flags) {
  * @return SPI_DFF_8_BIT, if dev has an 8-bit data frame format.
  *         Otherwise, SPI_DFF_16_BIT.
  */
-static inline spi_cfg_flag spi_dff(spi_dev *dev) {
-    return ((dev->regs->CR1 & SPI_CR1_DFF) == SPI_CR1_DFF_8_BIT ?
-            SPI_DFF_8_BIT :
-            SPI_DFF_16_BIT);
+static inline spi_cfg_flag spi_dff(spi_dev *dev)
+{
+  return ((dev->regs->CR1 & SPI_CR1_DFF) == SPI_CR1_DFF_8_BIT ?
+          SPI_DFF_8_BIT :
+          SPI_DFF_16_BIT);
 }
 
 /**
@@ -401,8 +406,9 @@ static inline spi_cfg_flag spi_dff(spi_dev *dev) {
  * @param dev SPI device
  * @return true, iff dev's RX register is empty.
  */
-static inline uint8 spi_is_rx_nonempty(spi_dev *dev) {
-    return dev->regs->SR & SPI_SR_RXNE;
+static inline uint8 spi_is_rx_nonempty(spi_dev *dev)
+{
+  return dev->regs->SR & SPI_SR_RXNE;
 }
 
 /**
@@ -416,8 +422,9 @@ static inline uint8 spi_is_rx_nonempty(spi_dev *dev) {
  * @return Contents of dev's peripheral RX register
  * @see spi_is_rx_reg_nonempty()
  */
-static inline uint16 spi_rx_reg(spi_dev *dev) {
-    return (uint16)dev->regs->DR;
+static inline uint16 spi_rx_reg(spi_dev *dev)
+{
+  return (uint16)dev->regs->DR;
 }
 
 /**
@@ -426,8 +433,9 @@ static inline uint16 spi_rx_reg(spi_dev *dev) {
  * @param dev SPI device
  * @return true, iff dev's TX register is empty.
  */
-static inline uint8 spi_is_tx_empty(spi_dev *dev) {
-    return dev->regs->SR & SPI_SR_TXE;
+static inline uint8 spi_is_tx_empty(spi_dev *dev)
+{
+  return dev->regs->SR & SPI_SR_TXE;
 }
 
 /**
@@ -447,8 +455,9 @@ static inline uint8 spi_is_tx_empty(spi_dev *dev) {
  * @see spi_master_enable()
  * @see spi_slave_enable()
  */
-static inline void spi_tx_reg(spi_dev *dev, uint16 val) {
-    dev->regs->DR = val;
+static inline void spi_tx_reg(spi_dev *dev, uint16 val)
+{
+  dev->regs->DR = val;
 }
 
 /**
@@ -457,8 +466,9 @@ static inline void spi_tx_reg(spi_dev *dev, uint16 val) {
  * @param dev SPI device
  * @return true, iff dev's BSY flag is set.
  */
-static inline uint8 spi_is_busy(spi_dev *dev) {
-    return dev->regs->SR & SPI_SR_BSY;
+static inline uint8 spi_is_busy(spi_dev *dev)
+{
+  return dev->regs->SR & SPI_SR_BSY;
 }
 
 /*

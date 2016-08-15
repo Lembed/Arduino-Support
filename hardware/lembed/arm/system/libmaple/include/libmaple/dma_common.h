@@ -45,7 +45,7 @@
 #define _LIBMAPLE_DMA_COMMON_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/libmaple_types.h>

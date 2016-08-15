@@ -45,17 +45,18 @@ extern "C" {
  *
  * @param us Number of microseconds to delay.
  */
-static inline void delay_us(uint32 us) {
-    us *= STM32_DELAY_US_MULT;
+static inline void delay_us(uint32 us)
+{
+	us *= STM32_DELAY_US_MULT;
 
-    /* fudge for function call overhead  */
-    us--;
-    asm volatile("   mov r0, %[us]          \n\t"
-                 "1: subs r0, #1            \n\t"
-                 "   bhi 1b                 \n\t"
-                 :
-                 : [us] "r" (us)
-                 : "r0");
+	/* fudge for function call overhead  */
+	us--;
+	asm volatile("   mov r0, %[us]          \n\t"
+	             "1: subs r0, #1            \n\t"
+	             "   bhi 1b                 \n\t"
+	             :
+	             : [us] "r" (us)
+	             : "r0");
 }
 
 #ifdef __cplusplus

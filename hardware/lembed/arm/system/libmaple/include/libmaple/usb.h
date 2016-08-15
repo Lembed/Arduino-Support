@@ -161,11 +161,13 @@ void usb_init_usblib(usblib_dev *dev,
                      void (**ep_int_in)(void),
                      void (**ep_int_out)(void));
 
-static inline uint8 usb_is_connected(usblib_dev *dev) {
+static inline uint8 usb_is_connected(usblib_dev *dev)
+{
     return dev->state != USB_UNCONNECTED;
 }
 
-static inline uint8 usb_is_configured(usblib_dev *dev) {
+static inline uint8 usb_is_configured(usblib_dev *dev)
+{
     return dev->state == USB_CONFIGURED;
 }
 

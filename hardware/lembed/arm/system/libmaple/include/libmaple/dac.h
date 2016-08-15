@@ -36,10 +36,10 @@
 #define _LIBMAPLE_DAC_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
- /* Roger clark. Replaced with line below #include <series/dac.h>*/
+/* Roger clark. Replaced with line below #include <series/dac.h>*/
 #include "stm32f1/include/series/dac.h"
 #include <libmaple/libmaple_types.h>
 #include <libmaple/rcc.h>
@@ -56,7 +56,7 @@ extern "C"{
 
 /** DAC device type. */
 typedef struct dac_dev {
-    dac_reg_map *regs; /**< Register map */
+	dac_reg_map *regs; /**< Register map */
 } dac_dev;
 
 #if STM32_HAVE_DAC

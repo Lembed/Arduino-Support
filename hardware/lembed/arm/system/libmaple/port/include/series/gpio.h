@@ -35,7 +35,7 @@
 #define _LIBMAPLE_STM32F1_GPIO_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/stm32.h>
@@ -66,6 +66,7 @@ extern struct gpio_dev gpioc;
 extern struct gpio_dev* const GPIOC;
 extern struct gpio_dev gpiod;
 extern struct gpio_dev* const GPIOD;
+
 #ifdef STM32_HIGH_DENSITY
 extern struct gpio_dev gpioe;
 extern struct gpio_dev* const GPIOE;
@@ -321,9 +322,9 @@ void afio_init(void);
  * @see afio_remap()
  */
 typedef enum afio_remap_peripheral {
-     /** ADC 2 external trigger regular conversion remapping */
+    /** ADC 2 external trigger regular conversion remapping */
     AFIO_REMAP_ADC2_ETRGREG   = AFIO_MAPR_ADC2_ETRGREG_REMAP,
-     /** ADC 2 external trigger injected conversion remapping */
+    /** ADC 2 external trigger injected conversion remapping */
     AFIO_REMAP_ADC2_ETRGINJ   = AFIO_MAPR_ADC2_ETRGINJ_REMAP,
     /** ADC 1 external trigger regular conversion remapping */
     AFIO_REMAP_ADC1_ETRGREG   = AFIO_MAPR_ADC1_ETRGREG_REMAP,
@@ -353,8 +354,8 @@ typedef enum afio_remap_peripheral {
     AFIO_REMAP_TIM2_PARTIAL_2 = AFIO_MAPR_TIM2_REMAP_PA0_PA1_PB10_PB11,
     /** Timer 2 full remapping */
     AFIO_REMAP_TIM2_FULL      = AFIO_MAPR_TIM2_REMAP_FULL,
-     /** USART 3 part remapping */
-    AFIO_REMAP_USART3_PARTIAL = AFIO_MAPR_USART3_REMAP_PARTIAL,    
+    /** USART 3 part remapping */
+    AFIO_REMAP_USART3_PARTIAL = AFIO_MAPR_USART3_REMAP_PARTIAL,
     /** USART 2 remapping */
     AFIO_REMAP_USART2         = AFIO_MAPR_USART2_REMAP,
     /** USART 1 remapping */
@@ -403,7 +404,8 @@ typedef enum afio_debug_cfg {
  * @param config Desired debug port configuration
  * @see afio_debug_cfg
  */
-static inline void afio_cfg_debug_ports(afio_debug_cfg config) {
+static inline void afio_cfg_debug_ports(afio_debug_cfg config)
+{
     __io uint32 *mapr = &AFIO_BASE->MAPR;
     *mapr = (*mapr & ~AFIO_MAPR_SWJ_CFG) | config;
 }
@@ -484,7 +486,8 @@ typedef exti_num afio_exti_num;
 /**
  * @brief Deprecated. Use exti_select(exti, port) instead.
  */
-static inline __always_inline void afio_exti_select(exti_num exti, exti_cfg port) {
+static inline __always_inline void afio_exti_select(exti_num exti, exti_cfg port)
+{
     exti_select(exti, port);
 }
 

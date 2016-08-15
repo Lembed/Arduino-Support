@@ -33,7 +33,7 @@
 #define _LIBMAPLE_FLASH_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/libmaple_types.h>
@@ -62,7 +62,7 @@ extern "C"{
  *
  *   See that function's Doxygen for more restrictions.
  */
- /* Roger clark. Replaced with line below #include <series/flash.h>*/
+/* Roger clark. Replaced with line below #include <series/flash.h>*/
 #include "stm32f1/include/series/flash.h"
 
 #ifdef __DOXYGEN__
@@ -89,15 +89,17 @@ void flash_set_latency(uint32 wait_states);
  *                      FLASH_ICACHE (turns on instruction cache),
  *                      FLASH_DCACHE (turns on data cache).
  */
-static inline void flash_enable_features(uint32 feature_flags) {
-    FLASH_BASE->ACR |= feature_flags;
+static inline void flash_enable_features(uint32 feature_flags)
+{
+	FLASH_BASE->ACR |= feature_flags;
 }
 
 /**
  * @brief Deprecated. Use flash_enable_features(FLASH_PREFETCH) instead.
  */
-static inline void flash_enable_prefetch(void) {
-    flash_enable_features(FLASH_PREFETCH);
+static inline void flash_enable_prefetch(void)
+{
+	flash_enable_features(FLASH_PREFETCH);
 }
 
 #ifdef __cplusplus

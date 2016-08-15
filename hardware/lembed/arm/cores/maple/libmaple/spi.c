@@ -68,25 +68,25 @@ void spi_config_gpios(spi_dev *ignored,
                       uint8 miso_bit,
                       uint8 mosi_bit)
 {
-    if (as_master) {
-        //   gpio_set_mode(nss_dev, nss_bit, GPIO_AF_OUTPUT_PP);// Roger Clark. Commented out, so that NSS can be driven as a normal GPIO pin during SPI use
-        gpio_set_mode(comm_dev, sck_bit, GPIO_AF_OUTPUT_PP);
-        gpio_set_mode(comm_dev, miso_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(comm_dev, mosi_bit, GPIO_AF_OUTPUT_PP);
-    } else {
-        gpio_set_mode(nss_dev, nss_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(comm_dev, sck_bit, GPIO_INPUT_FLOATING);
-        gpio_set_mode(comm_dev, miso_bit, GPIO_AF_OUTPUT_PP);
-        gpio_set_mode(comm_dev, mosi_bit, GPIO_INPUT_FLOATING);
-    }
+  if (as_master) {
+    //   gpio_set_mode(nss_dev, nss_bit, GPIO_AF_OUTPUT_PP);// Roger Clark. Commented out, so that NSS can be driven as a normal GPIO pin during SPI use
+    gpio_set_mode(comm_dev, sck_bit, GPIO_AF_OUTPUT_PP);
+    gpio_set_mode(comm_dev, miso_bit, GPIO_INPUT_FLOATING);
+    gpio_set_mode(comm_dev, mosi_bit, GPIO_AF_OUTPUT_PP);
+  } else {
+    gpio_set_mode(nss_dev, nss_bit, GPIO_INPUT_FLOATING);
+    gpio_set_mode(comm_dev, sck_bit, GPIO_INPUT_FLOATING);
+    gpio_set_mode(comm_dev, miso_bit, GPIO_AF_OUTPUT_PP);
+    gpio_set_mode(comm_dev, mosi_bit, GPIO_INPUT_FLOATING);
+  }
 }
 
 void spi_foreach(void (*fn)(spi_dev*))
 {
-    fn(SPI1);
-    fn(SPI2);
+  fn(SPI1);
+  fn(SPI2);
 #if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
-    fn(SPI3);
+  fn(SPI3);
 #endif
 }
 
@@ -100,8 +100,8 @@ void spi_foreach(void (*fn)(spi_dev*))
  */
 void spi_init(spi_dev *dev)
 {
-    rcc_clk_enable(dev->clk_id);
-    rcc_reset_dev(dev->clk_id);
+  rcc_clk_enable(dev->clk_id);
+  rcc_reset_dev(dev->clk_id);
 }
 
 /**
@@ -120,7 +120,7 @@ void spi_master_enable(spi_dev *dev,
                        spi_mode mode,
                        uint32 flags)
 {
-    spi_reconfigure(dev, baud | flags | SPI_CR1_MSTR | mode);
+  spi_reconfigure(dev, baud | flags | SPI_CR1_MSTR | mode);
 }
 
 /**
@@ -135,7 +135,7 @@ void spi_master_enable(spi_dev *dev,
  */
 void spi_slave_enable(spi_dev *dev, spi_mode mode, uint32 flags)
 {
-    spi_reconfigure(dev, flags | mode);
+  spi_reconfigure(dev, flags | mode);
 }
 
 /**
@@ -149,16 +149,16 @@ void spi_slave_enable(spi_dev *dev, spi_mode mode, uint32 flags)
  */
 uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len)
 {
-    uint32 txed = 0;
-    uint8 byte_frame = spi_dff(dev) == SPI_DFF_8_BIT;
-    while (spi_is_tx_empty(dev) && (txed < len)) {
-        if (byte_frame) {
-            dev->regs->DR = ((const uint8*)buf)[txed++];
-        } else {
-            dev->regs->DR = ((const uint16*)buf)[txed++];
-        }
+  uint32 txed = 0;
+  uint8 byte_frame = spi_dff(dev) == SPI_DFF_8_BIT;
+  while (spi_is_tx_empty(dev) && (txed < len)) {
+    if (byte_frame) {
+      dev->regs->DR = ((const uint8*)buf)[txed++];
+    } else {
+      dev->regs->DR = ((const uint16*)buf)[txed++];
     }
-    return txed;
+  }
+  return txed;
 }
 
 /**
@@ -167,7 +167,7 @@ uint32 spi_tx(spi_dev *dev, const void *buf, uint32 len)
  */
 void spi_peripheral_enable(spi_dev *dev)
 {
-    bb_peri_set_bit(&dev->regs->CR1, SPI_CR1_SPE_BIT, 1);
+  bb_peri_set_bit(&dev->regs->CR1, SPI_CR1_SPE_BIT, 1);
 }
 
 /**
@@ -176,7 +176,7 @@ void spi_peripheral_enable(spi_dev *dev)
  */
 void spi_peripheral_disable(spi_dev *dev)
 {
-    bb_peri_set_bit(&dev->regs->CR1, SPI_CR1_SPE_BIT, 0);
+  bb_peri_set_bit(&dev->regs->CR1, SPI_CR1_SPE_BIT, 0);
 }
 
 /**
@@ -185,7 +185,7 @@ void spi_peripheral_disable(spi_dev *dev)
  */
 void spi_tx_dma_enable(spi_dev *dev)
 {
-    bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_TXDMAEN_BIT, 1);
+  bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_TXDMAEN_BIT, 1);
 }
 
 /**
@@ -194,7 +194,7 @@ void spi_tx_dma_enable(spi_dev *dev)
  */
 void spi_tx_dma_disable(spi_dev *dev)
 {
-    bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_TXDMAEN_BIT, 0);
+  bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_TXDMAEN_BIT, 0);
 }
 
 /**
@@ -203,7 +203,7 @@ void spi_tx_dma_disable(spi_dev *dev)
  */
 void spi_rx_dma_enable(spi_dev *dev)
 {
-    bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_RXDMAEN_BIT, 1);
+  bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_RXDMAEN_BIT, 1);
 }
 
 /**
@@ -212,7 +212,7 @@ void spi_rx_dma_enable(spi_dev *dev)
  */
 void spi_rx_dma_disable(spi_dev *dev)
 {
-    bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_RXDMAEN_BIT, 0);
+  bb_peri_set_bit(&dev->regs->CR2, SPI_CR2_RXDMAEN_BIT, 0);
 }
 
 /*
@@ -221,8 +221,8 @@ void spi_rx_dma_disable(spi_dev *dev)
 
 static void spi_reconfigure(spi_dev *dev, uint32 cr1_config)
 {
-    spi_irq_disable(dev, SPI_INTERRUPTS_ALL);
-    spi_peripheral_disable(dev);
-    dev->regs->CR1 = cr1_config;
-    spi_peripheral_enable(dev);
+  spi_irq_disable(dev, SPI_INTERRUPTS_ALL);
+  spi_peripheral_disable(dev);
+  dev->regs->CR1 = cr1_config;
+  spi_peripheral_enable(dev);
 }

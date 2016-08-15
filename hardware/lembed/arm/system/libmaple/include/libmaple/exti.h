@@ -35,7 +35,7 @@
 #define _LIBMAPLE_EXTI_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 /* Roger clark. replaced by line below #include <series/exti.h>  */      /* provides EXTI_BASE */
