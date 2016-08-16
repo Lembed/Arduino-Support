@@ -81,7 +81,7 @@ extern "C"{
  *   convenience functions useful for the series. */
 
  /* Roger clark. Replaced with line below #include <series/dma.h>*/
-#include "stm32f1/include/series/dma.h"
+#include "port/include/series/dma.h"
 
 /* <libmaple/dma_common.h> buys us dma_dev and other necessities. */
 #include <libmaple/dma_common.h>

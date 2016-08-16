@@ -38,7 +38,7 @@ extern "C" {
 
 #include <libmaple/libmaple.h>
  /* Roger clark. Replaced with line below #include <series/pwr.h>*/
-#include "stm32f1/include/series/pwr.h"
+#include "port/include/series/pwr.h"
 
 
 /** Power interface register map. */

@@ -104,7 +104,7 @@ typedef struct adc_dev {
  */
 
 /* Roger clark. Replaced with line below #include <series/adc.h>*/
-#include "stm32f1/include/series/adc.h"
+#include "port/include/series/adc.h"
 
 
 /*

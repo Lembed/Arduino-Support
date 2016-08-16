@@ -38,7 +38,7 @@ extern "C"{
 #endif
 
 /* Roger clark. Replaced with line below #include <series/timer.h>*/
-#include "stm32f1/include/series/timer.h"
+#include "port/include/series/timer.h"
 #include <libmaple/libmaple.h>
 #include <libmaple/rcc.h>
 #include <libmaple/nvic.h>

@@ -51,7 +51,7 @@ typedef enum rcc_sysclk_src {
 } rcc_sysclk_src;
 
 /* Roger clark. Replaced with line below #include <series/rcc.h>*/
-#include "stm32f1/include/series/rcc.h"
+#include "port/include/series/rcc.h"
 
 /* Note: Beyond the usual (registers, etc.), it's up to the series
  * header to define the following types:

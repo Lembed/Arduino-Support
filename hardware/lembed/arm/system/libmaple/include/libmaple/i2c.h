@@ -65,7 +65,7 @@ extern "C" {
  */
 
  /* Roger clark. Replaced with line below #include <series/i2c.h>*/
-#include "stm32f1/include/series/i2c.h"
+#include "port/include/series/i2c.h"
 #include <libmaple/i2c_common.h>
 
 #include <libmaple/libmaple_types.h>
