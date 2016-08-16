@@ -28,10 +28,10 @@
  * @file libmaple/stm32f1/include/series/stm32.h
  * @brief STM32F1 chip- and series-specific definitions.
  */
- /*
-  * Modified by Roger Clark. 20141111. Wrapped #define STM32_MEDIUM_DENSITY in #ifndef 
-  * to prevent redefinition warnings as SSTM32_MEDIUM_DENSITY is defined in boards.txt as a compilor define.
-  */
+/*
+ * Modified by Roger Clark. 20141111. Wrapped #define STM32_MEDIUM_DENSITY in #ifndef
+ * to prevent redefinition warnings as SSTM32_MEDIUM_DENSITY is defined in boards.txt as a compilor define.
+ */
 
 #ifndef _LIBMAPLE_STM32F1_H_
 #define _LIBMAPLE_STM32F1_H_
@@ -40,7 +40,6 @@
 extern "C" {
 #endif
 
-#define STM32_MCU_SERIES                STM32_SERIES_F1
 
 /* The STM32F1 series is subdivided into "lines". libmaple currently
  * officially supports STM32F103 performance line MCUs (see the
@@ -91,9 +90,9 @@ extern "C" {
 
 #elif defined(MCU_STM32F103CB)
 #   define STM32_F1_LINE                STM32_F1_LINE_PERFORMANCE
-    /* This STM32_NR_GPIO_PORTS is not true, but only pins 0 and
-     * exist, and they're used for OSC (e.g. on LeafLabs' Maple Mini),
-     * so we'll live with this for now. */
+/* This STM32_NR_GPIO_PORTS is not true, but only pins 0 and
+ * exist, and they're used for OSC (e.g. on LeafLabs' Maple Mini),
+ * so we'll live with this for now. */
 #   define STM32_NR_GPIO_PORTS          3
 #   define STM32_SRAM_END               ((void*)0x20005000)
 #   define STM32_MEDIUM_DENSITY
@@ -174,7 +173,7 @@ extern "C" {
  */
 
 #if STM32_F1_LINE == STM32_F1_LINE_PERFORMANCE
-     /* All supported performance line MCUs have a USB peripheral */
+/* All supported performance line MCUs have a USB peripheral */
 #    define STM32_HAVE_USB              1
 
 #    ifdef STM32_MEDIUM_DENSITY
@@ -195,7 +194,7 @@ extern "C" {
 #    endif
 
 #elif STM32_F1_LINE == STM32_F1_LINE_VALUE
-     /* Value line MCUs don't have USB peripherals. */
+/* Value line MCUs don't have USB peripherals. */
 #    define STM32_HAVE_USB              0
 
 #    ifdef STM32_MEDIUM_DENSITY
@@ -203,8 +202,8 @@ extern "C" {
 #        define STM32_HAVE_FSMC         0
 #        define STM32_HAVE_DAC          1
 #    elif defined(STM32_HIGH_DENSITY)
-         /* 61 interrupts here counts the possibility for a remapped
-          * DMA2 channel 5 IRQ occurring at NVIC index 60.  */
+/* 61 interrupts here counts the possibility for a remapped
+ * DMA2 channel 5 IRQ occurring at NVIC index 60.  */
 #        define STM32_NR_INTERRUPTS     61
 #        define STM32_HAVE_FSMC         1
 #        define STM32_HAVE_DAC          1
@@ -227,7 +226,7 @@ extern "C" {
 #    define STM32_PCLK2                     F_CPU
 #    endif
 #    ifndef STM32_DELAY_US_MULT
-#		define STM32_DELAY_US_MULT 				(F_CPU / 6000000L)
+#   define STM32_DELAY_US_MULT        (F_CPU / 6000000L)
 #    endif
 #elif STM32_F1_LINE == STM32_F1_LINE_VALUE        /* TODO */
 #    ifndef STM32_PCLK1

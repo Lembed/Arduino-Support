@@ -42,7 +42,8 @@
  * execution. On overflow, restarts at 0.
  * @see micros()
  */
-static inline uint32 millis(void) {
+static inline uint32 millis(void)
+{
     return systick_uptime();
 }
 
@@ -51,7 +52,8 @@ static inline uint32 millis(void) {
  * execution.  On overflow, restarts at 0.
  * @see millis()
  */
-static inline uint32 micros(void) {
+static inline uint32 micros(void)
+{
     uint32 ms;
     uint32 cycle_cnt;
 

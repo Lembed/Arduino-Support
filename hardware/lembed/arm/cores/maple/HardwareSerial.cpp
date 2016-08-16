@@ -90,6 +90,7 @@ DEFINE_HWSERIAL_UART(Serial5, 6);
 #endif
 
 #endif
+
 HardwareSerial::HardwareSerial(usart_dev *usart_device,
                                uint8 tx_pin,
                                uint8 rx_pin)
@@ -103,7 +104,6 @@ HardwareSerial::HardwareSerial(usart_dev *usart_device,
  * Set up/tear down
  */
 
-#if STM32_MCU_SERIES == STM32_SERIES_F1
 /* F1 MCUs have no GPIO_AFR[HL], so turn off PWM if there's a conflict
  * on this GPIO bit. */
 static void disable_timer_if_necessary(timer_dev *dev, uint8 ch)
@@ -112,12 +112,7 @@ static void disable_timer_if_necessary(timer_dev *dev, uint8 ch)
 		timer_set_mode(dev, ch, TIMER_DISABLED);
 	}
 }
-#elif (STM32_MCU_SERIES == STM32_SERIES_F2) ||    \
-      (STM32_MCU_SERIES == STM32_SERIES_F4)
-#define disable_timer_if_necessary(dev, ch) ((void)0)
-#else
-#warning "Unsupported STM32 series; timer conflicts are possible"
-#endif
+
 
 void HardwareSerial::begin(uint32 baud)
 {

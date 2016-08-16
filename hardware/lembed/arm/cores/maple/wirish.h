@@ -34,7 +34,7 @@
 #ifndef _WIRISH_WIRISH_H_
 #define _WIRISH_WIRISH_H_
 
-/* 
+/*
  * 20141030. Roger Clark
    Added the block of includes up to avr/interrupt so that stdlib functions like memcpy would be included and could be used.
  */
@@ -62,9 +62,9 @@
 #include <wirish_constants.h>
 #include <wiring_pulse.h>
 
-#if STM32_MCU_SERIES == STM32_SERIES_F1 /* FIXME [0.0.13?] port to F2 */
+
 //#include <HardwareSPI.h>
-#endif
+
 
 #include <HardwareSerial.h>
 #include <HardwareTimer.h>
@@ -97,7 +97,7 @@ typedef unsigned int word;
 // Roger Clark. Added _BV macro for AVR compatibility. As requested by @sweetlilmre and @stevestrong
 #ifndef _BV
 #define _BV(bit) (1 << (bit))
-#endif 
+#endif
 
 #define clockCyclesPerMicrosecond() ( F_CPU / 1000000L )
 #define clockCyclesToMicroseconds(a) ( ((a) * 1000L) / (F_CPU / 1000L) )

@@ -50,12 +50,7 @@ extern "C" {
 
 /** STM32F1 series. */
 #define STM32_SERIES_F1 0
-/** STM32F2 series. */
-#define STM32_SERIES_F2 1
-/** STM32L1 series. */
-#define STM32_SERIES_L1 2
-/** STM32F4 series. */
-#define STM32_SERIES_F4 3
+
 
 /* The series header is responsible for defining:
  *
@@ -67,13 +62,12 @@ extern "C" {
  * - STM32_HAVE_USB: 1 if the MCU has a USB peripheral, and 0
  *   otherwise.
  */
- /* roger clark. replaced with line below  #include <series/stm32.h> */
-#include "stm32f1/include/series/stm32.h"
+/* roger clark. replaced with line below  #include <series/stm32.h> */
+#include "port/include/series/stm32.h"
 
 /* Ensure the series header isn't broken. */
 #if (!defined(STM32_PCLK1)         ||     \
      !defined(STM32_PCLK2)         ||     \
-     !defined(STM32_MCU_SERIES)    ||     \
      !defined(STM32_NR_INTERRUPTS) ||     \
      !defined(STM32_NR_GPIO_PORTS) ||     \
      !defined(STM32_TIMER_MASK)    ||     \

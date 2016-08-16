@@ -44,28 +44,30 @@
 #define PMAP_ROW(gpio_dev, gpio_bit, timer_dev, timer_ch, adc_dev, adc_ch) \
     { gpio_dev, timer_dev, adc_dev, gpio_bit, timer_ch, adc_ch }
 
-namespace wirish {
-    namespace priv {
+namespace wirish
+{
+namespace priv
+{
 
-        /*
-         * Chip-specific initialization data
-         */
+/*
+ * Chip-specific initialization data
+ */
 
-        extern rcc_pll_cfg w_board_pll_cfg;
-        extern adc_prescaler w_adc_pre;
-        extern adc_smp_rate w_adc_smp;
+extern rcc_pll_cfg w_board_pll_cfg;
+extern adc_prescaler w_adc_pre;
+extern adc_smp_rate w_adc_smp;
 
-        /*
-         * Chip-specific initialization routines and helper functions.
-         */
+/*
+ * Chip-specific initialization routines and helper functions.
+ */
 
-        void board_reset_pll(void);
-        void board_setup_clock_prescalers(void);
-        void board_setup_gpio(void);
-        void board_setup_usb(void);
-        void series_init(void);
+void board_reset_pll(void);
+void board_setup_clock_prescalers(void);
+void board_setup_gpio(void);
+void board_setup_usb(void);
+void series_init(void);
 
-    }
+}
 }
 
 #endif

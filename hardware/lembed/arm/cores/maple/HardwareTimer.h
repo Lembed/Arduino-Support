@@ -41,7 +41,8 @@ typedef timer_mode TimerMode;
 /**
  * @brief Interface to one of the 16-bit timer peripherals.
  */
-class HardwareTimer {
+class HardwareTimer
+{
 private:
     timer_dev *dev;
 
@@ -213,10 +214,11 @@ public:
      */
     timer_dev* c_dev(void) { return this->dev; }
 
-/* -- The rest of this file is deprecated. --------------------------------- */
+    /* -- The rest of this file is deprecated. --------------------------------- */
 
     /** @brief Deprecated; use setMode(channel, mode) instead. */
-    void setChannelMode(int channel, timer_mode mode) {
+    void setChannelMode(int channel, timer_mode mode)
+    {
         setMode(channel, mode);
     }
 
@@ -257,22 +259,26 @@ public:
     void setCompare4(uint16 compare) { setCompare(TIMER_CH4, compare); }
 
     /** @brief Deprecated; use attachInterrupt(TIMER_CH1, handler) instead. */
-    void attachCompare1Interrupt(voidFuncPtr handler) {
+    void attachCompare1Interrupt(voidFuncPtr handler)
+    {
         attachInterrupt(TIMER_CH1, handler);
     }
 
     /** @brief Deprecated; use attachInterrupt(TIMER_CH2, handler) instead. */
-    void attachCompare2Interrupt(voidFuncPtr handler) {
+    void attachCompare2Interrupt(voidFuncPtr handler)
+    {
         attachInterrupt(TIMER_CH2, handler);
     }
 
     /** @brief Deprecated; use attachInterrupt(TIMER_CH3, handler) instead. */
-    void attachCompare3Interrupt(voidFuncPtr handler) {
+    void attachCompare3Interrupt(voidFuncPtr handler)
+    {
         attachInterrupt(TIMER_CH3, handler);
     }
 
     /** @brief Deprecated; use attachInterrupt(TIMER_CH4, handler) instead. */
-    void attachCompare4Interrupt(voidFuncPtr handler) {
+    void attachCompare4Interrupt(voidFuncPtr handler)
+    {
         attachInterrupt(TIMER_CH4, handler);
     }
 
@@ -319,7 +325,7 @@ extern HardwareTimer Timer3;
  * Pre-instantiated timer.
  */
 extern HardwareTimer Timer4;
-#if (STM32_MCU_SERIES == STM32_SERIES_F1) && defined(STM32_HIGH_DENSITY)
+#if defined(STM32_HIGH_DENSITY)
 /**
  * @brief Deprecated.
  *
