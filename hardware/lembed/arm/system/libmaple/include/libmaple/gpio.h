@@ -34,7 +34,7 @@
 #define _LIBMAPLE_GPIO_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 /*
@@ -43,7 +43,7 @@ extern "C"{
  */
 
 // roger clark. replaced with line below #include <series/gpio.h>
-#include "port/include/series/gpio.h"
+#include "port/include/gpio.h"
 #include <libmaple/libmaple_types.h>
 #include <libmaple/rcc.h>
 #include <libmaple/exti.h>
@@ -76,7 +76,8 @@ gpio_pin_mode gpio_get_mode(gpio_dev *dev, uint8 pin);
  * @brief Get a GPIO port's corresponding EXTI port configuration.
  * @param dev GPIO port whose exti_cfg to return.
  */
-static inline exti_cfg gpio_exti_port(gpio_dev *dev) {
+static inline exti_cfg gpio_exti_port(gpio_dev *dev)
+{
     return (exti_cfg)(EXTI_PA + (dev->clk_id - RCC_GPIOA));
 }
 
@@ -89,7 +90,8 @@ static inline exti_cfg gpio_exti_port(gpio_dev *dev) {
  * @param pin Pin on to set or reset
  * @param val If true, set the pin.  If false, reset the pin.
  */
-static inline void gpio_write_bit(gpio_dev *dev, uint8 pin, uint8 val) {
+static inline void gpio_write_bit(gpio_dev *dev, uint8 pin, uint8 val)
+{
     val = !val;          /* "set" bits are lower than "reset" bits  */
     dev->regs->BSRR = (1U << pin) << (16 * val);
 }
@@ -103,7 +105,8 @@ static inline void gpio_write_bit(gpio_dev *dev, uint8 pin, uint8 val) {
  * @param pin Pin on dev to test.
  * @return True if the pin is set, false otherwise.
  */
-static inline uint32 gpio_read_bit(gpio_dev *dev, uint8 pin) {
+static inline uint32 gpio_read_bit(gpio_dev *dev, uint8 pin)
+{
     return dev->regs->IDR & (1U << pin);
 }
 
@@ -112,7 +115,8 @@ static inline uint32 gpio_read_bit(gpio_dev *dev, uint8 pin) {
  * @param dev GPIO device.
  * @param pin Pin on dev to toggle.
  */
-static inline void gpio_toggle_bit(gpio_dev *dev, uint8 pin) {
+static inline void gpio_toggle_bit(gpio_dev *dev, uint8 pin)
+{
     dev->regs->ODR = dev->regs->ODR ^ (1U << pin);
 }
 

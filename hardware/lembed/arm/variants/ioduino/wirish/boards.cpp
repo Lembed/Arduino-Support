@@ -62,8 +62,7 @@ static void setup_timers(void);
  * Exported functions
  */
 
-void init(void)
-{
+void init(void) {
     setup_flash();
     setup_clocks();
     setup_nvic();
@@ -77,14 +76,12 @@ void init(void)
 }
 
 /* Provide a default no-op boardInit(). */
-__weak void boardInit(void)
-{
+__weak void boardInit(void) {
 }
 
 /* You could farm this out to the files in boards/ if e.g. it takes
  * too long to test on boards with lots of pins. */
-bool boardUsesPin(uint8 pin)
-{
+bool boardUsesPin(uint8 pin) {
     for (int i = 0; i < BOARD_NR_USED_PINS; i++) {
         if (pin == boardUsedPins[i]) {
             return true;
@@ -97,8 +94,7 @@ bool boardUsesPin(uint8 pin)
  * Auxiliary routines
  */
 
-static void setup_flash(void)
-{
+static void setup_flash(void) {
     // Turn on as many Flash "go faster" features as
     // possible. flash_enable_features() just ignores any flags it
     // can't support.
@@ -108,8 +104,7 @@ static void setup_flash(void)
     flash_set_latency(FLASH_SAFE_WAIT_STATES);
 }
 
-static void setup_clocks(void)
-{
+static void setup_clocks(void) {
     // Turn on HSI. We'll switch to and run off of this while we're
     // setting up the main PLL.
     rcc_turn_on_clk(RCC_CLK_HSI);
@@ -137,7 +132,7 @@ static void setup_clocks(void)
 
     // Enable the PLL, and wait until it's ready.
     rcc_turn_on_clk(RCC_CLK_PLL);
-    while (!rcc_is_clk_ready(RCC_CLK_PLL))
+    while(!rcc_is_clk_ready(RCC_CLK_PLL))
         ;
 
     // Finally, switch to the now-ready PLL as the main clock source.
@@ -150,55 +145,45 @@ static void setup_clocks(void)
  * at the Flash base address, 0x08000000.
  */
 #if defined(BOOTLOADER_maple)
-#define USER_ADDR_ROM 0x08005000
+	#define USER_ADDR_ROM 0x08005000
 #else
-#if defined(BOOTLOADER_robotis)
-#define USER_ADDR_ROM 0x08003000
-#else
-#define USER_ADDR_ROM 0x08000000
-#endif
+	#if defined(BOOTLOADER_robotis)
+		#define USER_ADDR_ROM 0x08003000
+	#else
+		#define USER_ADDR_ROM 0x08000000
+	#endif
 #endif
 #define USER_ADDR_RAM 0x20000C00
 extern char __text_start__;
 
-static void setup_nvic(void)
-{
-
+static void setup_nvic(void) {
+#ifdef VECT_TAB_FLASH
+    nvic_init(USER_ADDR_ROM, 0);
+#elif defined VECT_TAB_RAM
+    nvic_init(USER_ADDR_RAM, 0);
+#elif defined VECT_TAB_BASE
+    nvic_init((uint32)0x08000000, 0);
+#elif defined VECT_TAB_ADDR
+    // A numerically supplied value
     nvic_init((uint32)VECT_TAB_ADDR, 0);
-
-    /* Roger Clark. We now control nvic vector table in boards.txt using the build.vect paramater
-    #ifdef VECT_TAB_FLASH
-        nvic_init(USER_ADDR_ROM, 0);
-    #elif defined VECT_TAB_RAM
-        nvic_init(USER_ADDR_RAM, 0);
-    #elif defined VECT_TAB_BASE
-        nvic_init((uint32)0x08000000, 0);
-    #elif defined VECT_TAB_ADDR
-        // A numerically supplied value
-        nvic_init((uint32)VECT_TAB_ADDR, 0);
-    #else
-        // Use the __text_start__ value from the linker script; this
-        // should be the start of the vector table.
-        nvic_init((uint32)&__text_start__, 0);
-    #endif
-
-    */
+#else
+    // Use the __text_start__ value from the linker script; this
+    // should be the start of the vector table.
+    nvic_init((uint32)&__text_start__, 0);
+#endif
 }
 
-static void adc_default_config(const adc_dev *dev)
-{
+static void adc_default_config(const adc_dev *dev) {
     adc_enable_single_swstart(dev);
     adc_set_sample_rate(dev, wirish::priv::w_adc_smp);
 }
 
-static void setup_adcs(void)
-{
+static void setup_adcs(void) {
     adc_set_prescaler(wirish::priv::w_adc_pre);
     adc_foreach(adc_default_config);
 }
 
-static void timer_default_config(timer_dev *dev)
-{
+static void timer_default_config(timer_dev *dev) {
     timer_adv_reg_map *regs = (dev->regs).adv;
     const uint16 full_overflow = 0xFFFF;
     const uint16 half_duty = 0x8FFF;
@@ -214,7 +199,7 @@ static void timer_default_config(timer_dev *dev)
     switch (dev->type) {
     case TIMER_ADVANCED:
         regs->BDTR = TIMER_BDTR_MOE | TIMER_BDTR_LOCK_OFF;
-    // fall-through
+        // fall-through
     case TIMER_GENERAL:
         timer_set_reload(dev, full_overflow);
         for (uint8 channel = 1; channel <= 4; channel++) {
@@ -224,7 +209,7 @@ static void timer_default_config(timer_dev *dev)
                                   TIMER_OC_PE);
             }
         }
-    // fall-through
+        // fall-through
     case TIMER_BASIC:
         break;
     }
@@ -233,7 +218,6 @@ static void timer_default_config(timer_dev *dev)
     timer_resume(dev);
 }
 
-static void setup_timers(void)
-{
+static void setup_timers(void) {
     timer_foreach(timer_default_config);
 }

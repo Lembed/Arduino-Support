@@ -47,7 +47,7 @@
 #define _LIBMAPLE_NVIC_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/libmaple_types.h>
@@ -99,7 +99,7 @@ typedef struct nvic_reg_map {
  */
 
 /* Roger clark. Replaced with line below #include <series/nvic.h>*/
-#include "port/include/series/nvic.h"
+#include "port/include/nvic.h"
 
 void nvic_init(uint32 address, uint32 offset);
 void nvic_set_vector_table(uint32 address, uint32 offset);
@@ -109,14 +109,16 @@ void nvic_sys_reset();
 /**
  * Enables interrupts and configurable fault handlers (clear PRIMASK).
  */
-static inline __always_inline void nvic_globalirq_enable() {
+static inline __always_inline void nvic_globalirq_enable()
+{
     asm volatile("cpsie i");
 }
 
 /**
  * Disable interrupts and configurable fault handlers (set PRIMASK).
  */
-static inline __always_inline void nvic_globalirq_disable() {
+static inline __always_inline void nvic_globalirq_disable()
+{
     asm volatile("cpsid i");
 }
 
@@ -124,7 +126,8 @@ static inline __always_inline void nvic_globalirq_disable() {
  * @brief Enable interrupt irq_num
  * @param irq_num Interrupt to enable
  */
-static inline void nvic_irq_enable(nvic_irq_num irq_num) {
+static inline void nvic_irq_enable(nvic_irq_num irq_num)
+{
     if (irq_num < 0) {
         return;
     }
@@ -135,7 +138,8 @@ static inline void nvic_irq_enable(nvic_irq_num irq_num) {
  * @brief Disable interrupt irq_num
  * @param irq_num Interrupt to disable
  */
-static inline void nvic_irq_disable(nvic_irq_num irq_num) {
+static inline void nvic_irq_disable(nvic_irq_num irq_num)
+{
     if (irq_num < 0) {
         return;
     }

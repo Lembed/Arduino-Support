@@ -1,5 +1,5 @@
 MEMORY
 {
-  ram (rwx) : ORIGIN = 0x20000C00, LENGTH = 61K
-  rom (rx)  : ORIGIN = 0x08005000, LENGTH = 492K
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 64K
+  rom (rx)  : ORIGIN = 0x08002000, LENGTH = 504K
 }

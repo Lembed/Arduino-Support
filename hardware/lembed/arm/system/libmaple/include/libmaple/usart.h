@@ -35,7 +35,7 @@
 #define _LIBMAPLE_USART_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/libmaple_types.h>
@@ -44,8 +44,8 @@ extern "C"{
 #include <libmaple/nvic.h>
 #include <libmaple/ring_buffer.h>
 
- /* Roger clark. Replaced with line below #include <series/usart.h>*/
-#include "port/include/series/usart.h"
+/* Roger clark. Replaced with line below #include <series/usart.h>*/
+#include "port/include/usart.h"
 
 /*
  * Register map (common across supported STM32 series).
@@ -53,13 +53,13 @@ extern "C"{
 
 /** USART register map type */
 typedef struct usart_reg_map {
-    __io uint32 SR;             /**< Status register */
-    __io uint32 DR;             /**< Data register */
-    __io uint32 BRR;            /**< Baud rate register */
-    __io uint32 CR1;            /**< Control register 1 */
-    __io uint32 CR2;            /**< Control register 2 */
-    __io uint32 CR3;            /**< Control register 3 */
-    __io uint32 GTPR;           /**< Guard time and prescaler register */
+  __io uint32 SR;             /**< Status register */
+  __io uint32 DR;             /**< Data register */
+  __io uint32 BRR;            /**< Baud rate register */
+  __io uint32 CR1;            /**< Control register 1 */
+  __io uint32 CR2;            /**< Control register 2 */
+  __io uint32 CR3;            /**< Control register 3 */
+  __io uint32 GTPR;           /**< Guard time and prescaler register */
 } usart_reg_map;
 
 /*
@@ -383,16 +383,16 @@ typedef struct usart_reg_map {
 
 /** USART device type */
 typedef struct usart_dev {
-    usart_reg_map *regs;             /**< Register map */
-    ring_buffer *rb;                 /**< RX ring buffer */
-    uint32 max_baud;                 /**< @brief Deprecated.
+  usart_reg_map *regs;             /**< Register map */
+  ring_buffer *rb;                 /**< RX ring buffer */
+  uint32 max_baud;                 /**< @brief Deprecated.
                                       * Maximum baud rate. */
-    uint8 rx_buf[USART_RX_BUF_SIZE]; /**< @brief Deprecated.
+  uint8 rx_buf[USART_RX_BUF_SIZE]; /**< @brief Deprecated.
                                       * Actual RX buffer used by rb.
                                       * This field will be removed in
                                       * a future release. */
-    rcc_clk_id clk_id;               /**< RCC clock information */
-    nvic_irq_num irq_num;            /**< USART NVIC interrupt */
+  rcc_clk_id clk_id;               /**< RCC clock information */
+  nvic_irq_num irq_num;            /**< USART NVIC interrupt */
 } usart_dev;
 
 void usart_init(usart_dev *dev);
@@ -426,8 +426,9 @@ void usart_putudec(usart_dev *dev, uint32 val);
 /**
  * @brief Disable all serial ports.
  */
-static inline void usart_disable_all(void) {
-    usart_foreach(usart_disable);
+static inline void usart_disable_all(void)
+{
+  usart_foreach(usart_disable);
 }
 
 /**
@@ -439,9 +440,10 @@ static inline void usart_disable_all(void) {
  * @param dev Serial port to send on.
  * @param byte Byte to transmit.
  */
-static inline void usart_putc(usart_dev* dev, uint8 byte) {
-    while (!usart_tx(dev, &byte, 1))
-        ;
+static inline void usart_putc(usart_dev* dev, uint8 byte)
+{
+  while (!usart_tx(dev, &byte, 1))
+    ;
 }
 
 /**
@@ -452,11 +454,12 @@ static inline void usart_putc(usart_dev* dev, uint8 byte) {
  * @param dev Serial port to send on
  * @param str String to send
  */
-static inline void usart_putstr(usart_dev *dev, const char* str) {
-    uint32 i = 0;
-    while (str[i] != '\0') {
-        usart_putc(dev, str[i++]);
-    }
+static inline void usart_putstr(usart_dev *dev, const char* str)
+{
+  uint32 i = 0;
+  while (str[i] != '\0') {
+    usart_putc(dev, str[i++]);
+  }
 }
 
 /**
@@ -469,19 +472,20 @@ static inline void usart_putstr(usart_dev *dev, const char* str) {
  * @return byte read
  * @see usart_data_available()
  */
-static inline uint8 usart_getc(usart_dev *dev) {
-    return rb_remove(dev->rb);
+static inline uint8 usart_getc(usart_dev *dev)
+{
+  return rb_remove(dev->rb);
 }
 
 /*
- * Roger Clark. 20141125, 
+ * Roger Clark. 20141125,
  * added peek function.
  * @param dev Serial port to read from
  * @return byte read
  */
 static inline int usart_peek(usart_dev *dev)
 {
-	return rb_peek(dev->rb);
+  return rb_peek(dev->rb);
 }
 
 
@@ -490,16 +494,18 @@ static inline int usart_peek(usart_dev *dev)
  * @param dev Serial port to check
  * @return Number of bytes in dev's RX buffer.
  */
-static inline uint32 usart_data_available(usart_dev *dev) {
-    return rb_full_count(dev->rb);
+static inline uint32 usart_data_available(usart_dev *dev)
+{
+  return rb_full_count(dev->rb);
 }
 
 /**
  * @brief Discard the contents of a serial port's RX buffer.
  * @param dev Serial port whose buffer to empty.
  */
-static inline void usart_reset_rx(usart_dev *dev) {
-    rb_reset(dev->rb);
+static inline void usart_reset_rx(usart_dev *dev)
+{
+  rb_reset(dev->rb);
 }
 
 #ifdef __cplusplus

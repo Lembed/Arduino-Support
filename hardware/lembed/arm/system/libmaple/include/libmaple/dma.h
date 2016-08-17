@@ -38,7 +38,7 @@
 #define _LIBMAPLE_DMA_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 /* <series/dma.h> provides:
@@ -80,8 +80,8 @@ extern "C"{
  *   definitions, dma_dev pointer declarations, and any other
  *   convenience functions useful for the series. */
 
- /* Roger clark. Replaced with line below #include <series/dma.h>*/
-#include "port/include/series/dma.h"
+/* Roger clark. Replaced with line below #include <series/dma.h>*/
+#include "port/include/dma.h"
 
 /* <libmaple/dma_common.h> buys us dma_dev and other necessities. */
 #include <libmaple/dma_common.h>

@@ -64,8 +64,8 @@ extern "C" {
  * - Reg. map base pointers, device pointer declarations.
  */
 
- /* Roger clark. Replaced with line below #include <series/i2c.h>*/
-#include "port/include/series/i2c.h"
+/* Roger clark. Replaced with line below #include <series/i2c.h>*/
+#include "port/include/i2c.h"
 #include <libmaple/i2c_common.h>
 
 #include <libmaple/libmaple_types.h>
@@ -214,7 +214,8 @@ void i2c_bus_reset(const i2c_dev *dev);
  *
  * @param dev Device to disable.
  */
-static inline void i2c_disable(i2c_dev *dev) {
+static inline void i2c_disable(i2c_dev *dev)
+{
     dev->regs->CR1 &= ~I2C_CR1_PE;
     dev->state = I2C_STATE_DISABLED;
 }
@@ -225,7 +226,8 @@ static inline void i2c_disable(i2c_dev *dev) {
  * @brief Generate a start condition on the bus.
  * @param dev I2C device
  */
-static inline void i2c_start_condition(i2c_dev *dev) {
+static inline void i2c_start_condition(i2c_dev *dev)
+{
     uint32 cr1;
     while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
                                      I2C_CR1_STOP  |
@@ -239,7 +241,8 @@ static inline void i2c_start_condition(i2c_dev *dev) {
  * @brief Generate a stop condition on the bus
  * @param dev I2C device
  */
-static inline void i2c_stop_condition(i2c_dev *dev) {
+static inline void i2c_stop_condition(i2c_dev *dev)
+{
     uint32 cr1;
     while ((cr1 = dev->regs->CR1) & (I2C_CR1_START |
                                      I2C_CR1_STOP  |
@@ -274,7 +277,8 @@ static inline void i2c_stop_condition(i2c_dev *dev) {
  *             I2C_IRQ_EVENT (event interrupt), and
  *             I2C_IRQ_BUFFER (buffer interrupt).
  */
-static inline void i2c_enable_irq(i2c_dev *dev, uint32 irqs) {
+static inline void i2c_enable_irq(i2c_dev *dev, uint32 irqs)
+{
     _i2c_irq_priority_fixup(dev);
     dev->regs->CR2 |= irqs;
 }
@@ -287,7 +291,8 @@ static inline void i2c_enable_irq(i2c_dev *dev, uint32 irqs) {
  *             I2C_IRQ_EVENT (event interrupt), and
  *             I2C_IRQ_BUFFER (buffer interrupt).
  */
-static inline void i2c_disable_irq(i2c_dev *dev, uint32 irqs) {
+static inline void i2c_disable_irq(i2c_dev *dev, uint32 irqs)
+{
     dev->regs->CR2 &= ~irqs;
 }
 
@@ -297,7 +302,8 @@ static inline void i2c_disable_irq(i2c_dev *dev, uint32 irqs) {
  * @brief Enable I2C acknowledgment
  * @param dev I2C device
  */
-static inline void i2c_enable_ack(i2c_dev *dev) {
+static inline void i2c_enable_ack(i2c_dev *dev)
+{
     dev->regs->CR1 |= I2C_CR1_ACK;
 }
 
@@ -305,7 +311,8 @@ static inline void i2c_enable_ack(i2c_dev *dev) {
  * @brief Disable I2C acknowledgment
  * @param dev I2C device
  */
-static inline void i2c_disable_ack(i2c_dev *dev) {
+static inline void i2c_disable_ack(i2c_dev *dev)
+{
     dev->regs->CR1 &= ~I2C_CR1_ACK;
 }
 
@@ -342,7 +349,8 @@ void i2c_init(i2c_dev *dev);
  * @brief Turn on an I2C peripheral
  * @param dev Device to enable
  */
-static inline void i2c_peripheral_enable(i2c_dev *dev) {
+static inline void i2c_peripheral_enable(i2c_dev *dev)
+{
     dev->regs->CR1 |= I2C_CR1_PE;
 }
 
@@ -350,7 +358,8 @@ static inline void i2c_peripheral_enable(i2c_dev *dev) {
  * @brief Turn off an I2C peripheral
  * @param dev Device to turn off
  */
-static inline void i2c_peripheral_disable(i2c_dev *dev) {
+static inline void i2c_peripheral_disable(i2c_dev *dev)
+{
     dev->regs->CR1 &= ~I2C_CR1_PE;
 }
 
@@ -359,7 +368,8 @@ static inline void i2c_peripheral_disable(i2c_dev *dev) {
  * @param dev I2C device
  * @param byte Byte to write
  */
-static inline void i2c_write(i2c_dev *dev, uint8 byte) {
+static inline void i2c_write(i2c_dev *dev, uint8 byte)
+{
     dev->regs->DR = byte;
 }
 
@@ -371,7 +381,8 @@ static inline void i2c_write(i2c_dev *dev, uint8 byte) {
  *             rcc_dev_clk(dev) == RCC_APB1, freq must be at most
  *             PCLK1, in MHz). There is an additional limit of 46 MHz.
  */
-static inline void i2c_set_input_clk(i2c_dev *dev, uint32 freq) {
+static inline void i2c_set_input_clk(i2c_dev *dev, uint32 freq)
+{
 #define I2C_MAX_FREQ_MHZ 46
     ASSERT(2 <= freq && freq <= _i2c_bus_clk(dev) && freq <= I2C_MAX_FREQ_MHZ);
     uint32 cr2 = dev->regs->CR2;
@@ -390,7 +401,8 @@ static inline void i2c_set_input_clk(i2c_dev *dev, uint32 freq) {
  * @param val Value to use for clock control register (in
  *            Fast/Standard mode)
  */
-static inline void i2c_set_clk_control(i2c_dev *dev, uint32 val) {
+static inline void i2c_set_clk_control(i2c_dev *dev, uint32 val)
+{
     uint32 ccr = dev->regs->CCR;
     ccr &= ~I2C_CCR_CCR;
     ccr |= val;
@@ -403,7 +415,8 @@ static inline void i2c_set_clk_control(i2c_dev *dev, uint32 val) {
  * @param trise Maximum rise time in fast/standard mode (see chip
  *              reference manual for the relevant formulas).
  */
-static inline void i2c_set_trise(i2c_dev *dev, uint32 trise) {
+static inline void i2c_set_trise(i2c_dev *dev, uint32 trise)
+{
     dev->regs->TRISE = trise;
 }
 

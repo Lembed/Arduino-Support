@@ -33,7 +33,7 @@
 #define _LIBMAPLE_RCC_H_
 
 #ifdef __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 #include <libmaple/libmaple_types.h>
@@ -45,13 +45,13 @@ extern "C"{
  * @see rcc_switch_sysclk()
  */
 typedef enum rcc_sysclk_src {
-    RCC_CLKSRC_HSI = 0x0,
-    RCC_CLKSRC_HSE = 0x1,
-    RCC_CLKSRC_PLL = 0x2,
+	RCC_CLKSRC_HSI = 0x0,
+	RCC_CLKSRC_HSE = 0x1,
+	RCC_CLKSRC_PLL = 0x2,
 } rcc_sysclk_src;
 
 /* Roger clark. Replaced with line below #include <series/rcc.h>*/
-#include "port/include/series/rcc.h"
+#include "port/include/rcc.h"
 
 /* Note: Beyond the usual (registers, etc.), it's up to the series
  * header to define the following types:
@@ -109,10 +109,10 @@ void rcc_switch_sysclk(rcc_sysclk_src sysclk_src);
  * @brief Specifies a configuration for the main PLL.
  */
 typedef struct rcc_pll_cfg {
-    rcc_pllsrc  pllsrc;     /**< PLL source */
+	rcc_pllsrc  pllsrc;     /**< PLL source */
 
-    /** Series-specific configuration data. */
-    void       *data;
+	/** Series-specific configuration data. */
+	void       *data;
 } rcc_pll_cfg;
 
 /**
@@ -158,15 +158,17 @@ rcc_clk_domain rcc_dev_clk(rcc_clk_id id);
 /**
  * @brief Enable the clock security system (CSS).
  */
-static inline void rcc_enable_css() {
-    RCC_BASE->CR |= RCC_CR_CSSON;
+static inline void rcc_enable_css()
+{
+	RCC_BASE->CR |= RCC_CR_CSSON;
 }
 
 /**
  * @brief Disable the clock security system (CSS).
  */
-static inline void rcc_disable_css() {
-    RCC_BASE->CR &= ~RCC_CR_CSSON;
+static inline void rcc_disable_css()
+{
+	RCC_BASE->CR &= ~RCC_CR_CSSON;
 }
 
 /**

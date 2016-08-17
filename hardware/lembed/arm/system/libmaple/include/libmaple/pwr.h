@@ -37,14 +37,14 @@ extern "C" {
 #endif
 
 #include <libmaple/libmaple.h>
- /* Roger clark. Replaced with line below #include <series/pwr.h>*/
-#include "port/include/series/pwr.h"
+/* Roger clark. Replaced with line below #include <series/pwr.h>*/
+#include "port/include/pwr.h"
 
 
 /** Power interface register map. */
 typedef struct pwr_reg_map {
-    __io uint32 CR;      /**< Control register */
-    __io uint32 CSR;     /**< Control and status register */
+	__io uint32 CR;      /**< Control register */
+	__io uint32 CSR;     /**< Control and status register */
 } pwr_reg_map;
 
 /** Power peripheral register map base pointer. */

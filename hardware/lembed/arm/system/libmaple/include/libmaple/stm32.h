@@ -63,7 +63,7 @@ extern "C" {
  *   otherwise.
  */
 /* roger clark. replaced with line below  #include <series/stm32.h> */
-#include "port/include/series/stm32.h"
+#include "port/include/stm32.h"
 
 /* Ensure the series header isn't broken. */
 #if (!defined(STM32_PCLK1)         ||     \

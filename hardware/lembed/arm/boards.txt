@@ -81,11 +81,6 @@ STM32DUINO.menu.upload_method.STLinkMethod.upload.protocol=STLink
 STM32DUINO.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 STM32DUINO.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
 
-STM32DUINO.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
-STM32DUINO.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
-STM32DUINO.menu.upload_method.BMPMethod.upload.tool=bmp_upload
-STM32DUINO.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG
-
 
 ########################### IODUINO ###########################
 
@@ -100,13 +95,12 @@ IODUINO.upload.use_1200bps_touch=false
 IODUINO.upload.file_type=bin
 IODUINO.upload.auto_reset=true
 
-
 IODUINO.menu.device_variant.IODUINO=IODUINO
-IODUINO.menu.device_variant.IODUINO.build.cpu_flags=-DMCU_STM32F103ZE
+IODUINO.menu.device_variant.IODUINO.build.cpu_flags=-DMCU_STM32F103VE
 IODUINO.menu.device_variant.IODUINO.upload.maximum_size=524288
 IODUINO.menu.device_variant.IODUINO.upload.ram.maximum_size=65536
 IODUINO.menu.device_variant.IODUINO.upload.flash.maximum_size=524288
-IODUINO.menu.device_variant.IODUINO.build.ldscript=ld/stm32f103ze.ld
+IODUINO.menu.device_variant.IODUINO.build.ldscript=ld/stm32f103ve.ld
 
 #---------------------------- UPLOAD METHODS ---------------------------
 
@@ -115,7 +109,7 @@ IODUINO.menu.upload_method.DFUUploadMethod.upload.protocol=maple_dfu
 IODUINO.menu.upload_method.DFUUploadMethod.upload.tool=maple_upload
 IODUINO.menu.upload_method.DFUUploadMethod.build.upload_flags=-DSERIAL_USB -DGENERIC_BOOTLOADER
 IODUINO.menu.upload_method.DFUUploadMethod.build.vect=VECT_TAB_ADDR=0x8002000
-IODUINO.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103z_dfu.ld
+IODUINO.menu.upload_method.DFUUploadMethod.build.ldscript=ld/stm32f103veDFU.ld
 IODUINO.menu.upload_method.DFUUploadMethod.upload.usbID=1EAF:0003
 IODUINO.menu.upload_method.DFUUploadMethod.upload.altID=2
 
@@ -128,7 +122,3 @@ IODUINO.menu.upload_method.STLinkMethod.upload.protocol=STLink
 IODUINO.menu.upload_method.STLinkMethod.upload.tool=stlink_upload
 IODUINO.menu.upload_method.STLinkMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG=1 -DSERIAL_USB -DGENERIC_BOOTLOADER
 
-IODUINO.menu.upload_method.BMPMethod=BMP (Black Magic Probe)
-IODUINO.menu.upload_method.BMPMethod.upload.protocol=gdb_bmp
-IODUINO.menu.upload_method.BMPMethod.upload.tool=bmp_upload
-IODUINO.menu.upload_method.BMPMethod.build.upload_flags=-DCONFIG_MAPLE_MINI_NO_DISABLE_DEBUG

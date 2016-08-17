@@ -40,7 +40,7 @@ extern "C" {
 #endif
 
 /* Roger clark. Replaced with line below #include <series/dac.h>*/
-#include "port/include/series/dac.h"
+#include "port/include/dac.h"
 #include <libmaple/libmaple_types.h>
 #include <libmaple/rcc.h>
 #include <libmaple/stm32.h>

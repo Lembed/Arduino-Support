@@ -45,7 +45,7 @@ extern "C" {
 #include <libmaple/rcc.h>
 #include <libmaple/nvic.h>
 /* Roger clark. Replaced with line below #include <series/spi.h>*/
-#include "port/include/series/spi.h"
+#include "port/include/spi.h"
 
 
 /*

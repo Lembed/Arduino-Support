@@ -52,9 +52,8 @@ typedef volatile unsigned short const    vuc16;  /* Read Only */
 typedef volatile unsigned char  const    vuc8;   /* Read Only */
 
 
-typedef enum
-{
-  FALSE = 0, TRUE  = !FALSE
+typedef enum {
+	FALSE = 0, TRUE  = !FALSE
 }
 USB_Bool;
 

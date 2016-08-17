@@ -1,1 +1,0 @@
-partial fork of arduino_stm32 repo.
