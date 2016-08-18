@@ -46,3 +46,9 @@ uint16 analogRead(uint8 pin)
 
 	return adc_read(dev, PIN_MAP[pin].adc_channel);
 }
+
+
+void analogWrite(uint8_t pin, int val)
+{
+
+}
