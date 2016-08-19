@@ -2,6 +2,7 @@
 
 Arduino ide support package for lembed arm & avr boards with arduino version 1.6.9
 
+[![Arduino-Support](https://img.shields.io/badge/build-passing-blue.svg)]()
 
 ## install
 
@@ -14,3 +15,5 @@ Arduino ide support package for lembed arm & avr boards with arduino version 1.6
 
 ## license
 This project is built of many different components. each have their own licenses
+
+[![Analytics](https://ga-beacon.appspot.com/UA-67438080-1/Arduino-Support/readme?pixel)](https://github.com/Lembed/Arduino-Support)
