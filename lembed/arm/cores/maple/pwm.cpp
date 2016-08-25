@@ -50,12 +50,7 @@ void pwmWrite(uint8 pin, uint16 duty_cycle)
 	timer_set_compare(dev, cc_channel, duty_cycle);
 }
 
-/*
- * Roger Clark. Added new function to replicate more closely what the Arduino API does
- * Note. This implementation is currently slower than it could be,
- * because pinMode needs to be called to set the special (new) mode of PWM
- * Some optimisation may be possible with pinMode or even in this function
- */
+
 void analogWrite(uint8 pin, int duty_cycle8)
 {
 	pinMode(pin, PWM);

@@ -53,8 +53,7 @@ void attachInterrupt(uint8 pin, voidFuncPtr handler, ExtIntTriggerMode mode)
                         outMode);
 }
 
-void attachInterrupt(uint8 pin, voidArgumentFuncPtr handler, void *arg,
-                     ExtIntTriggerMode mode)
+void attachInterrupt(uint8 pin, voidArgumentFuncPtr handler, void *arg, ExtIntTriggerMode mode)
 {
   if (pin >= BOARD_NR_GPIO_PINS || !handler) {
     return;
@@ -69,6 +68,7 @@ void attachInterrupt(uint8 pin, voidArgumentFuncPtr handler, void *arg,
                        outMode);
 }
 
+
 void detachInterrupt(uint8 pin)
 {
   if (pin >= BOARD_NR_GPIO_PINS) {
@@ -77,6 +77,7 @@ void detachInterrupt(uint8 pin)
 
   exti_detach_interrupt((exti_num)(PIN_MAP[pin].gpio_bit));
 }
+
 
 static inline exti_trigger_mode exti_out_mode(ExtIntTriggerMode mode)
 {

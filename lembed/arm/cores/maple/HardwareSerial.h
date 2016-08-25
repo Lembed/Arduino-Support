@@ -76,8 +76,7 @@ typedef uint8_t rx_buffer_index_t;
 
 struct usart_dev;
 
-/* Roger Clark
- *
+/*
  * Added config defines from AVR
  * Note. The values will need to be changed to match STM32 USART config register values, these are just place holders.
  */
@@ -92,18 +91,11 @@ struct usart_dev;
 
 #define SERIAL_8E1  0B00001010
 #define SERIAL_8E2  0B00101010
-/* not supported:
-#define SERIAL_9E1  0B00001010
-#define SERIAL_9E2  0B00101010
-*/
+
 #define SERIAL_8O1  0B00001011
 #define SERIAL_8O2  0B00101011
-/* not supported:
-#define SERIAL_9O1  0B00001011
-#define SERIAL_9O2  0B00101011
-*/
 
-/* Roger Clark
+/*
  * Moved macros from hardwareSerial.cpp
  */
 
@@ -118,10 +110,6 @@ struct usart_dev;
                         BOARD_USART##n##_RX_PIN)
 
 
-/* Roger clark. Changed class inheritance from Print to Stream.
- * Also added new functions for peek() and availableForWrite()
- * Note. AvailableForWrite is only a stub function in the cpp
- */
 class HardwareSerial : public Stream
 {
 

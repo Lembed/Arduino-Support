@@ -70,7 +70,8 @@ int cube2_r[] = {
 
 uint16 cube1_x, cube1_y, cube2_x, cube2_y, cube1_color, cube2_color;
 
-static void vLEDFlashTask(void *pvParameters) {
+static void vLEDFlashTask(void *pvParameters)
+{
   for (;;) {
     vTaskDelay(1000);
     digitalWrite(BOARD_LED_PIN, HIGH);
@@ -79,30 +80,31 @@ static void vLEDFlashTask(void *pvParameters) {
   }
 }
 
-static void vCube1LoopTask(void *pvParameters) {
+static void vCube1LoopTask(void *pvParameters)
+{
   while (1) {
-    if ( xSemaphoreTake( xDisplayFree, ( portTickType ) 10 ) == pdTRUE )
-    {
+    if ( xSemaphoreTake( xDisplayFree, ( portTickType ) 10 ) == pdTRUE ) {
       cube(cube1_px, cube1_py, cube1_pz, cube1_p2x, cube1_p2y, cube1_r, &cube1_x, &cube1_y, &cube1_color);
       xSemaphoreGive( xDisplayFree );
-        vTaskDelay(15);
+      vTaskDelay(15);
     }
   }
 }
 
-static void vCube2LoopTask(void *pvParameters) {
+static void vCube2LoopTask(void *pvParameters)
+{
   while (1) {
-    if ( xSemaphoreTake( xDisplayFree, ( portTickType ) 10 ) == pdTRUE )
-    {
+    if ( xSemaphoreTake( xDisplayFree, ( portTickType ) 10 ) == pdTRUE ) {
       cube(cube2_px, cube2_py, cube2_pz, cube2_p2x, cube2_p2y, cube2_r, &cube2_x, &cube2_y, &cube2_color);
       xSemaphoreGive( xDisplayFree );
-        vTaskDelay(40);
+      vTaskDelay(40);
     }
   }
 }
 
 
-void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint16 *x, uint16 *y, uint16 *color) {
+void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint16 *x, uint16 *y, uint16 *color)
+{
 
   for (int i = 0; i < 3; i++) {
     tft.drawLine(p2x[i], p2y[i], p2x[i + 1], p2y[i + 1], WHITE);
@@ -118,8 +120,7 @@ void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint1
   if (r[0] == 36) r[0] = 0;
   if (r[1] == 36) r[1] = 0;
   if (r[2] == 36) r[2] = 0;
-  for (int i = 0; i < 8; i++)
-  {
+  for (int i = 0; i < 8; i++) {
     float px2 = px[i];
     float py2 = cos_d[r[0]] * py[i] - sin_d[r[0]] * pz[i];
     float pz2 = sin_d[r[0]] * py[i] + cos_d[r[0]] * pz[i];
@@ -146,24 +147,26 @@ void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint1
   tft.drawLine(p2x[3], p2y[3], p2x[7], p2y[7], *color);
 }
 
-static void vSqrtTask(void *pvParameters) {
-  while (1){
-  Serial.println ("Starting Sqrt calculations...");
-  uint16 x = 0;
-  uint16 ixx[1001];
-  // Library Sqrt
-  uint32_t t0 = millis();
-  for (uint32_t n = 247583650 ; n > 247400000 ; n--) {
-    x = sqrt (n);
-  }
-  uint32_t t1 = millis() - t0;
-  Serial.print ("Sqrt calculations took (ms): ");
-  Serial.println (t1);
-  delay (5000);
+static void vSqrtTask(void *pvParameters)
+{
+  while (1) {
+    Serial.println ("Starting Sqrt calculations...");
+    uint16 x = 0;
+    uint16 ixx[1001];
+    // Library Sqrt
+    uint32_t t0 = millis();
+    for (uint32_t n = 247583650 ; n > 247400000 ; n--) {
+      x = sqrt (n);
+    }
+    uint32_t t1 = millis() - t0;
+    Serial.print ("Sqrt calculations took (ms): ");
+    Serial.println (t1);
+    delay (5000);
   }
 }
 
-void setup() {
+void setup()
+{
   // initialize the digital pin as an output:
   Serial.begin(9600);
   delay (5000);
@@ -194,7 +197,7 @@ void setup() {
               "Cube2",
               configMINIMAL_STACK_SIZE,
               NULL,
-              tskIDLE_PRIORITY+1,
+              tskIDLE_PRIORITY + 1,
               NULL);
   xTaskCreate(vSqrtTask,
               "Sqrt",
@@ -205,7 +208,8 @@ void setup() {
   vTaskStartScheduler();
 }
 
-void loop() {
+void loop()
+{
   // Do not write any code here, it would not execute.
 }
 

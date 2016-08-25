@@ -37,60 +37,6 @@
 #include <libmaple/timer.h>
 #include <libmaple/usart.h>
 
-#if 0
-
-#define DEFINE_HWSERIAL(name, n)                                   \
-		HardwareSerial name(USART##n,                                  \
-							BOARD_USART##n##_TX_PIN,                   \
-							BOARD_USART##n##_RX_PIN)
-
-#define DEFINE_HWSERIAL_UART(name, n)                             \
-		HardwareSerial name(UART##n,                                  \
-							BOARD_USART##n##_TX_PIN,                   \
-							BOARD_USART##n##_RX_PIN)
-
-#ifdef SERIAL_USB
-#if BOARD_HAVE_USART1
-DEFINE_HWSERIAL(Serial1, 1);
-#endif
-#if BOARD_HAVE_USART2
-DEFINE_HWSERIAL(Serial2, 2);
-#endif
-#if BOARD_HAVE_USART3
-DEFINE_HWSERIAL(Serial3, 3);
-#endif
-#if BOARD_HAVE_UART4
-DEFINE_HWSERIAL_UART(Serial4, 4);
-#endif
-#if BOARD_HAVE_UART5
-DEFINE_HWSERIAL_UART(Serial5, 5);
-#endif
-#if BOARD_HAVE_USART6
-DEFINE_HWSERIAL_UART(Serial6, 6);
-#endif
-#else
-#if BOARD_HAVE_USART1
-DEFINE_HWSERIAL(Serial, 1);
-#endif
-#if BOARD_HAVE_USART2
-DEFINE_HWSERIAL(Serial1, 2);
-#endif
-#if BOARD_HAVE_USART3
-DEFINE_HWSERIAL(Serial2, 3);
-#endif
-#if BOARD_HAVE_UART4
-DEFINE_HWSERIAL_UART(Serial3, 4);
-#endif
-#if BOARD_HAVE_UART5
-DEFINE_HWSERIAL_UART(Serial4, 5);
-#endif
-#if BOARD_HAVE_USART6
-DEFINE_HWSERIAL_UART(Serial5, 6);
-#endif
-#endif
-
-#endif
-
 HardwareSerial::HardwareSerial(usart_dev *usart_device,
                                uint8 tx_pin,
                                uint8 rx_pin)
@@ -118,17 +64,10 @@ void HardwareSerial::begin(uint32 baud)
 {
 	begin(baud, SERIAL_8N1);
 }
-/*
- * Roger Clark.
- * Note. The config parameter is not currently used. This is a work in progress.
- * Code needs to be written to set the config of the hardware serial control register in question.
- *
-*/
 
 void HardwareSerial::begin(uint32 baud, uint8_t config)
 {
-//   ASSERT(baud <= this->usart_device->max_baud);// Roger Clark. Assert doesn't do anything useful, we may as well save the space in flash and ram etc
-
+	// ASSERT(baud <= this->usart_device->max_baud);
 	if (baud > this->usart_device->max_baud) {
 		return;
 	}
@@ -155,12 +94,10 @@ void HardwareSerial::end(void)
 /*
  * I/O
  */
-
 int HardwareSerial::read(void)
 {
 	// Block until a byte becomes available, to save user confusion.
-	while (!this->available())
-		;
+	while (!this->available());
 	return usart_getc(this->usart_device);
 }
 
@@ -169,8 +106,6 @@ int HardwareSerial::available(void)
 	return usart_data_available(this->usart_device);
 }
 
-/* Roger Clark. Added function missing from LibMaple code */
-
 int HardwareSerial::peek(void)
 {
 	return usart_peek(this->usart_device);
@@ -178,17 +113,11 @@ int HardwareSerial::peek(void)
 
 int HardwareSerial::availableForWrite(void)
 {
-	/* Roger Clark.
-	 * Currently there isn't an output ring buffer, chars are sent straight to the hardware.
-	 * so just return 1, meaning that 1 char can be written
-	 * This will be slower than a ring buffer implementation, but it should at least work !
-	 */
 	return 1;
 }
 
 size_t HardwareSerial::write(unsigned char ch)
 {
-
 	usart_putc(this->usart_device, ch);
 	return 1;
 }
