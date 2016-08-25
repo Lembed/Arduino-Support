@@ -1,4 +1,4 @@
-#include "iEEPROM.h"
+#include "IEEPROM.h"
 #include "libmaple/util.h"
 #include "libmaple/flash.h"
 // See http://www.st.com/web/en/resource/technical/document/application_note/CD00165693.pdf
@@ -10,7 +10,7 @@
   *		EEPROM_BAD_FLASH:	page not empty after erase
   *		EEPROM_OK:			page blank
   */
-uint16 iEEPROMClass::EE_CheckPage(uint32 pageBase, uint16 status)
+uint16 IEEPROMClass::EE_CheckPage(uint32 pageBase, uint16 status)
 {
 	uint32 pageEnd = pageBase + (uint32)PageSize;
 
@@ -34,7 +34,7 @@ uint16 iEEPROMClass::EE_CheckPage(uint32 pageBase, uint16 status)
   *			FLASH_COMPLETE: success erase
   *			- Flash error code: on write Flash error
   */
-FLASH_Status iEEPROMClass::EE_ErasePage(uint32 pageBase)
+FLASH_Status IEEPROMClass::EE_ErasePage(uint32 pageBase)
 {
 	FLASH_Status FlashStatus;
 	uint16 data = (*(__io uint16*)(pageBase));
@@ -60,7 +60,7 @@ FLASH_Status iEEPROMClass::EE_ErasePage(uint32 pageBase)
   *			- EEPROM_BAD_FLASH:	page not empty after erase
   *			- EEPROM_OK:			page blank
   */
-uint16 iEEPROMClass::EE_CheckErasePage(uint32 pageBase, uint16 status)
+uint16 IEEPROMClass::EE_CheckErasePage(uint32 pageBase, uint16 status)
 {
 	uint16 FlashStatus;
 	if (EE_CheckPage(pageBase, status) != EEPROM_OK) {
@@ -79,7 +79,7 @@ uint16 iEEPROMClass::EE_CheckErasePage(uint32 pageBase, uint16 status)
   *			Page1: Page1 base address
   * @retval Valid page address (PAGE0 or PAGE1) or NULL in case of no valid page was found
   */
-uint32 iEEPROMClass::EE_FindValidPage(void)
+uint32 IEEPROMClass::EE_FindValidPage(void)
 {
 	uint16 status0 = (*(__io uint16*)PageBase0);		// Get Page0 actual status
 	uint16 status1 = (*(__io uint16*)PageBase1);		// Get Page1 actual status
@@ -101,7 +101,7 @@ uint32 iEEPROMClass::EE_FindValidPage(void)
   * @param	address: 16 bit virtual address of the variable to excluse (or 0XFFFF)
   * @retval count of variables
   */
-uint16 iEEPROMClass::EE_GetVariablesCount(uint32 pageBase, uint16 skipAddress)
+uint16 IEEPROMClass::EE_GetVariablesCount(uint32 pageBase, uint16 skipAddress)
 {
 	uint16 varAddress, nextAddress;
 	uint32 idx;
@@ -136,7 +136,7 @@ uint16 iEEPROMClass::EE_GetVariablesCount(uint32 pageBase, uint16 skipAddress)
   *           - EEPROM_OUT_SIZE: if valid new page is full
   *           - Flash error code: on write Flash error
   */
-uint16 iEEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 SkipAddress)
+uint16 IEEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 SkipAddress)
 {
 	uint32 oldEnd, newEnd;
 	uint32 oldIdx, newIdx, idx;
@@ -225,7 +225,7 @@ uint16 iEEPROMClass::EE_PageTransfer(uint32 newPage, uint32 oldPage, uint16 Skip
   *           - EEPROM_OUT_SIZE: if EEPROM size exceeded
   *           - Flash error code: on write Flash error
   */
-uint16 iEEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
+uint16 IEEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 {
 	FLASH_Status FlashStatus;
 	uint32 idx, pageBase, pageEnd, newPage;
@@ -304,7 +304,7 @@ uint16 iEEPROMClass::EE_VerifyPageFullWriteVariable(uint16 Address, uint16 Data)
 	return EE_PageTransfer(newPage, pageBase, Address);
 }
 
-iEEPROMClass::iEEPROMClass(void)
+IEEPROMClass::iEEPROMClass(void)
 {
 	PageBase0 = EEPROM_PAGE0_BASE;
 	PageBase1 = EEPROM_PAGE1_BASE;
@@ -312,7 +312,7 @@ iEEPROMClass::iEEPROMClass(void)
 	Status = EEPROM_NOT_INIT;
 }
 
-uint16 iEEPROMClass::init(uint32 pageBase0, uint32 pageBase1, uint32 pageSize)
+uint16 IEEPROMClass::init(uint32 pageBase0, uint32 pageBase1, uint32 pageSize)
 {
 	PageBase0 = pageBase0;
 	PageBase1 = pageBase1;
@@ -320,7 +320,7 @@ uint16 iEEPROMClass::init(uint32 pageBase0, uint32 pageBase1, uint32 pageSize)
 	return init();
 }
 
-uint16 iEEPROMClass::init(void)
+uint16 IEEPROMClass::init(void)
 {
 	uint16 status0, status1;
 	FLASH_Status FlashStatus;
@@ -423,7 +423,7 @@ uint16 iEEPROMClass::init(void)
   * @param  PAGE0 and PAGE1 base addresses
   * @retval Status of the last operation (Flash write or erase) done during EEPROM formating
   */
-uint16 iEEPROMClass::format(void)
+uint16 IEEPROMClass::format(void)
 {
 	uint16 status;
 	FLASH_Status FlashStatus;
@@ -453,7 +453,7 @@ uint16 iEEPROMClass::format(void)
   *			- EEPROM_OK: if erases counter return.
   *			- EEPROM_NO_VALID_PAGE: if no valid page was found.
   */
-uint16 iEEPROMClass::erases(uint16 *Erases)
+uint16 IEEPROMClass::erases(uint16 *Erases)
 {
 	uint32 pageBase;
 	if (Status != EEPROM_OK) {
@@ -478,7 +478,7 @@ uint16 iEEPROMClass::erases(uint16 *Erases)
   * @param  Address: Variable virtual address
   * @retval Data for variable or EEPROM_DEFAULT_DATA, if any errors
   */
-uint16 iEEPROMClass::read (uint16 Address)
+uint16 IEEPROMClass::read (uint16 Address)
 {
 	uint16 data;
 	read(Address, &data);
@@ -495,7 +495,7 @@ uint16 iEEPROMClass::read (uint16 Address)
   *           - EEPROM_BAD_ADDRESS: if the variable was not found
   *           - EEPROM_NO_VALID_PAGE: if no valid page was found.
   */
-uint16 iEEPROMClass::read(uint16 Address, uint16 *Data)
+uint16 IEEPROMClass::read(uint16 Address, uint16 *Data)
 {
 	uint32 pageBase, pageEnd;
 
@@ -540,7 +540,7 @@ uint16 iEEPROMClass::read(uint16 Address, uint16 *Data)
   *			- EEPROM_OUT_SIZE: if no empty EEPROM variables
   *			- Flash error code: on write Flash error
   */
-uint16 iEEPROMClass::write(uint16 Address, uint16 Data)
+uint16 IEEPROMClass::write(uint16 Address, uint16 Data)
 {
 	if (Status == EEPROM_NOT_INIT) {
 		if (init() != EEPROM_OK) {
@@ -561,7 +561,7 @@ uint16 iEEPROMClass::write(uint16 Address, uint16 Data)
   * @brief  Return number of variable
   * @retval Number of variables
   */
-uint16 iEEPROMClass::count(uint16 *Count)
+uint16 IEEPROMClass::count(uint16 *Count)
 {
 	if (Status == EEPROM_NOT_INIT) {
 		if (init() != EEPROM_OK) {
@@ -579,7 +579,7 @@ uint16 iEEPROMClass::count(uint16 *Count)
 	return EEPROM_OK;
 }
 
-uint16 iEEPROMClass::maxcount(void)
+uint16 IEEPROMClass::maxcount(void)
 {
 	return ((PageSize / 4) - 1);
 }
@@ -727,4 +727,4 @@ void FLASH_Lock(void)
 	FLASH_BASE->CR |= FLASH_CR_LOCK;
 }
 
-iEEPROMClass iEEPROM;
+IEEPROMClass ieepromClass;
