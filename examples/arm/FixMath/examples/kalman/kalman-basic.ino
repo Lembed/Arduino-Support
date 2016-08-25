@@ -57,107 +57,6 @@ kalman16_observation_t kfm;
 #error FIXMATRIX_MAX_SIZE must be greater or equal to the number of states, inputs and measurements.
 #endif
 
-/*!
-* \brief Initializes the gravity Kalman filter
-*/
-static void kalman_gravity_init()
-{
-    /************************************************************************/
-    /* initialize the filter structures                                     */
-    /************************************************************************/
-#if USE_UNCONTROLLED
-    kalman_filter_initialize_uc(&kf, KALMAN_NUM_STATES);
-#else
-    kalman_filter_initialize(&kf, KALMAN_NUM_STATES, KALMAN_NUM_INPUTS);
-#endif
-    kalman_observation_initialize(&kfm, KALMAN_NUM_STATES, KALMAN_NUM_MEASUREMENTS);
-
-    /************************************************************************/
-    /* set initial state                                                    */
-    /************************************************************************/
-#if USE_UNCONTROLLED
-    mf16 *x = kalman_get_state_vector_uc(&kf);
-#else
-    mf16 *x = kalman_get_state_vector(&kf);
-#endif
-    x->data[0][0] = 0; // s_i
-    x->data[1][0] = 0; // v_i
-    x->data[2][0] = fix16_from_float(6); // g_i
-
-    /************************************************************************/
-    /* set state transition                                                 */
-    /************************************************************************/
-#if USE_UNCONTROLLED
-    mf16 *A = kalman_get_state_transition_uc(&kf);
-#else
-    mf16 *A = kalman_get_state_transition(&kf);
-#endif
-
-    // set time constant
-    const fix16_t T = fix16_one;
-    const fix16_t Tsquare = fix16_sq(T);
-
-    // helper
-    const fix16_t fix16_half = fix16_from_float(0.5);
-
-    // transition of x to s
-    matrix_set(A, 0, 0, fix16_one);   // 1
-    matrix_set(A, 0, 1, T);   // T
-    matrix_set(A, 0, 2, fix16_mul(fix16_half, Tsquare)); // 0.5 * T^2
-
-    // transition of x to v
-    matrix_set(A, 1, 0, 0);   // 0
-    matrix_set(A, 1, 1, fix16_one);   // 1
-    matrix_set(A, 1, 2, T);   // T
-
-    // transition of x to g
-    matrix_set(A, 2, 0, 0);   // 0
-    matrix_set(A, 2, 1, 0);   // 0
-    matrix_set(A, 2, 2, fix16_one);   // 1
-
-    /************************************************************************/
-    /* set covariance                                                       */
-    /************************************************************************/
-#if USE_UNCONTROLLED
-    mf16 *P = kalman_get_system_covariance_uc(&kf);
-#else
-    mf16 *P = kalman_get_system_covariance(&kf);
-#endif
-
-    matrix_set_symmetric(P, 0, 0, fix16_half);   // var(s)
-    matrix_set_symmetric(P, 0, 1, 0);   // cov(s,v)
-    matrix_set_symmetric(P, 0, 2, 0);   // cov(s,g)
-
-    matrix_set_symmetric(P, 1, 1, fix16_one);   // var(v)
-    matrix_set_symmetric(P, 1, 2, 0);   // cov(v,g)
-
-    matrix_set_symmetric(P, 2, 2, fix16_one);   // var(g)
-
-    /************************************************************************/
-    /* set system process noise                                             */
-    /************************************************************************/
-#if USE_UNCONTROLLED
-    mf16 *Q = kalman_get_system_process_noise_uc(&kf);
-    mf16_fill(Q, F16(0.0001));
-#endif
-
-    /************************************************************************/
-    /* set measurement transformation                                       */
-    /************************************************************************/
-    mf16 *H = kalman_get_observation_transformation(&kfm);
-
-    matrix_set(H, 0, 0, fix16_one);     // z = 1*s
-    matrix_set(H, 0, 1, 0);     //   + 0*v
-    matrix_set(H, 0, 2, 0);     //   + 0*g
-
-    /************************************************************************/
-    /* set process noise                                                    */
-    /************************************************************************/
-    mf16 *R = kalman_get_observation_process_noise(&kfm);
-
-    matrix_set(R, 0, 0, fix16_half);     // var(s)
-}
-
 // define measurements.
 //
 // MATLAB source
@@ -208,18 +107,110 @@ static fix16_t measurement_error[MEAS_COUNT] = {
 
 void setup()
 {
-// initialize the filter
-    kalman_gravity_init();
+    /************************************************************************/
+    /* initialize the filter structures                                     */
+    /************************************************************************/
+#if USE_UNCONTROLLED
+    kalman_filter_initialize_uc(&kf, KALMAN_NUM_STATES);
+#else
+    kalman_filter_initialize(&kf, KALMAN_NUM_STATES, KALMAN_NUM_INPUTS);
+#endif
+    kalman_observation_initialize(&kfm, KALMAN_NUM_STATES, KALMAN_NUM_MEASUREMENTS);
+
+    /************************************************************************/
+    /* set initial state                                                    */
+    /************************************************************************/
+#if USE_UNCONTROLLED
+    mf16 *x = kalman_get_state_vector_uc(&kf);
+#else
+    mf16 *x = kalman_get_state_vector(&kf);
+#endif
+    x->data[0][0] = 0;                                  // s_i
+    x->data[1][0] = 0;                                  // v_i
+    x->data[2][0] = fix16_from_float(6);                // g_i
+
+    /************************************************************************/
+    /* set state transition                                                 */
+    /************************************************************************/
+#if USE_UNCONTROLLED
+    mf16 *A = kalman_get_state_transition_uc(&kf);
+#else
+    mf16 *A = kalman_get_state_transition(&kf);
+#endif
+
+    // set time constant
+    const fix16_t T = fix16_one;
+    const fix16_t Tsquare = fix16_sq(T);
+
+    // helper
+    const fix16_t fix16_half = fix16_from_float(0.5);
+
+    // transition of x to s
+    matrix_set(A, 0, 0, fix16_one);                     // 1
+    matrix_set(A, 0, 1, T);                             // T
+    matrix_set(A, 0, 2, fix16_mul(fix16_half, Tsquare)); // 0.5 * T^2
+
+    // transition of x to v
+    matrix_set(A, 1, 0, 0);                             // 0
+    matrix_set(A, 1, 1, fix16_one);                     // 1
+    matrix_set(A, 1, 2, T);                             // T
+
+    // transition of x to g
+    matrix_set(A, 2, 0, 0);                             // 0
+    matrix_set(A, 2, 1, 0);                             // 0
+    matrix_set(A, 2, 2, fix16_one);                     // 1
+
+    /************************************************************************/
+    /* set covariance                                                       */
+    /************************************************************************/
+#if USE_UNCONTROLLED
+    mf16 *P = kalman_get_system_covariance_uc(&kf);
+#else
+    mf16 *P = kalman_get_system_covariance(&kf);
+#endif
+
+    matrix_set_symmetric(P, 0, 0, fix16_half);          // var(s)
+    matrix_set_symmetric(P, 0, 1, 0);                   // cov(s,v)
+    matrix_set_symmetric(P, 0, 2, 0);                   // cov(s,g)
+
+    matrix_set_symmetric(P, 1, 1, fix16_one);           // var(v)
+    matrix_set_symmetric(P, 1, 2, 0);                   // cov(v,g)
+
+    matrix_set_symmetric(P, 2, 2, fix16_one);           // var(g)
+
+    /************************************************************************/
+    /* set system process noise                                             */
+    /************************************************************************/
+#if USE_UNCONTROLLED
+    mf16 *Q = kalman_get_system_process_noise_uc(&kf);
+    mf16_fill(Q, F16(0.0001));
+#endif
+
+    /************************************************************************/
+    /* set measurement transformation                                       */
+    /************************************************************************/
+    mf16 *H = kalman_get_observation_transformation(&kfm);
+
+    matrix_set(H, 0, 0, fix16_one);                     // z = 1*s
+    matrix_set(H, 0, 1, 0);                             //   + 0*v
+    matrix_set(H, 0, 2, 0);                             //   + 0*g
+
+    /************************************************************************/
+    /* set process noise                                                    */
+    /************************************************************************/
+    mf16 *R = kalman_get_observation_process_noise(&kfm);
+
+    matrix_set(R, 0, 0, fix16_half);                    // var(s)
 }
 
 
 void loop()
 {
 
+#if USE_UNCONTROLLED
     mf16 *x = kalman_get_state_vector_uc(&kf);
     mf16 *z = kalman_get_observation_vector(&kfm);
 
-#if USE_UNCONTROLLED
     // filter!
     uint_fast16_t i;
     for (i = 0; i < MEAS_COUNT; ++i) {
@@ -235,6 +226,10 @@ void loop()
     }
 
 #else
+
+    mf16 *x = kalman_get_state_vector(&kf);
+    mf16 *z = kalman_get_observation_vector(&kfm);
+
     // filter!
     uint_fast16_t i;
     for (i = 0; i < MEAS_COUNT; ++i) {
