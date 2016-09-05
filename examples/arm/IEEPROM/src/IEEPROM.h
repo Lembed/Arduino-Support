@@ -77,10 +77,10 @@ enum : uint16 {
 #define EEPROM_DEFAULT_DATA		0xFFFF
 
 
-class iEEPROMClass
+class IEEPROMClass
 {
 public:
-	iEEPROMClass(void);
+	IEEPROMClass(void);
 
 	uint16 init(void);
 	uint16 init(uint32, uint32, uint32);
@@ -110,6 +110,6 @@ private:
 	uint16 EE_VerifyPageFullWriteVariable(uint16, uint16);
 };
 
-extern iEEPROMClass iEEPROM;
+extern IEEPROMClass ieepromClass;
 
 #endif	/* __I_EEPROM_H__ */

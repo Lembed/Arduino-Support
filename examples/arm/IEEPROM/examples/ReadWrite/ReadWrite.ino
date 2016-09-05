@@ -1,4 +1,4 @@
-#include <IeeProm.h>
+#include <IEEPROM.h>
 
 int ledPin =  13;    // LED connected to digital pin 13
 const char HELP_MSG[] = "Press :\r\n" \
