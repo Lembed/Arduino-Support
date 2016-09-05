@@ -49,7 +49,6 @@ void setup() {
   SPI_2.setClockDivider(SPI_CLOCK_DIV16);  // Use a different speed to SPI 1
   pinMode(SPI2_NSS_PIN, OUTPUT);
 
-
 }
 
 void loop() {
