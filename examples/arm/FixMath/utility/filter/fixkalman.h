@@ -386,7 +386,6 @@ EXTERN_INLINE_KALMAN mf16* kalman_get_observation_process_noise(kalman16_observa
 /************************************************************************/
 
 #ifndef KALMAN_DISABLE_UC
-
 /*!
 * \brief Initializes the Kalman Filter
 * \param[in] kf The Kalman Filter structure to initialize
